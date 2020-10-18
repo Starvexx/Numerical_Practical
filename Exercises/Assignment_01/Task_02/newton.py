@@ -20,6 +20,8 @@ order of 10^-3 to 10^-7.
 #   Import packages.
 #######################################################################
 
+import warnings
+
 import numpy as np
 
 from matplotlib import rc
@@ -82,8 +84,12 @@ def newton(init=0,
     ###################################################################
     #   Save interim results to a list.
     ###################################################################
-    if interim_res is not None:
+    if interim_res is not None and isinstance(interim_res, list):
         interim_res.append(next_approx)
+    else:
+        wrn_msg = 'Warning: interim_res is not a list. Interim '\
+                  + 'results will not be saved for later use!'
+        warnings.warn(wrn_msg)
 
     ###################################################################
     #   Break condition:
@@ -195,6 +201,7 @@ def main():
     ax.set_ylabel('result')
     ax.set_xlim(0, 20.5)
     ax.set_ylim(-4, 4)
+    ax.set_xticks(range(0, 22, 2))
     ax.set_title('Results from Newton solver')
     ax.legend()
 

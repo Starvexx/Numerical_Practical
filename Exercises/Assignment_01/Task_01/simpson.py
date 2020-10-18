@@ -39,7 +39,7 @@ import types
 import numpy as np
 
 from matplotlib import rc
-import matplotlib.pyplot as plt
+from matplotlib import pyplot as plt
 
 #######################################################################
 #   Define functions used in this script.
@@ -180,7 +180,7 @@ def plotting(results, steps):
     ax.legend()
 
     ###################################################################
-    #   Position and the subplot within the figure.
+    #   Position the subplot within the figure.
     ###################################################################
     plt.subplots_adjust(left=0.11,
                         bottom=0.12,
@@ -193,7 +193,7 @@ def plotting(results, steps):
     ###################################################################
     plt.savefig('simpson_results.svg', format='svg')
     ###################################################################
-    #   Show the plot in popup window.
+    #   Show the plot in a popup window.
     ###################################################################
     plt.show()
 
