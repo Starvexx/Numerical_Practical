@@ -1,4 +1,8 @@
 # Excluded directories
 #
-.Literature/
-.Presentations/
+Literature/
+Presentations/
+
+# Exclude saved plots. They saved as .svg files.
+# 
+Exercises/Assignment_*/Task_*/*.svg
