@@ -40,7 +40,7 @@ def newton(init=0,
     """Newton method for equation solving.
 
     The Newton method is an iterative approach to function solving.
-    A different name for this method is tangent method because it 
+    A different name for this method is tangent method because it
     uses the first derivative of the function in the equation. Each
     following estimate of the solution can be computed as follows:
 
@@ -121,7 +121,7 @@ def newton(init=0,
 
 def main():
     """Main subroutine"""
-    
+
     ###################################################################
     #   Define the first function and its derivative. They will be
     #   passed to the newton-function along with the interim_1 list.
@@ -140,7 +140,7 @@ def main():
                       derivative=df_1,
                       tolerance=1e-5,
                       interim_res=interim_1)
-    
+
     ###################################################################
     #   Define the second functiuon and its derivative.
     ###################################################################

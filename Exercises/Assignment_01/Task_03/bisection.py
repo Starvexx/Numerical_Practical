@@ -46,17 +46,9 @@ def main():
     #   Define lambda functions for the speed of sound c_s, the radius
     #   of the critical point r_c and a velocity unit.
     ###################################################################
-    c_s = lambda T : np.sqrt(np.divide(const.k_B * T,
-                                       0.5 * const.m_p))
-    r_c = lambda c_sound : np.divide(const.G * const.M_sun,
-                                 2*np.square(c_sound))
+    c_s = lambda T : np.sqrt((const.k_B * T) / (0.5 * const.m_p))
+    r_c = lambda c_sound : (const.G * const.M_sun) / (2 * c_sound**2)
     mps = u.m / u.s
-
-    ###################################################################
-    #   Define the function with dependence on the velocity and the
-    #   radial distance from the star.
-    ###################################################################
-    parker =  lambda v, r
 
     ###################################################################
     #   For debugging.
@@ -64,7 +56,36 @@ def main():
     # print(r_c(c_sound(10*u.K)).to(u.au))
     # print(c_sound(10*u.K).to(mps))
 
+    ###################################################################
+    #   Define the function with dependence on the velocity and the
+    #   radial distance from the star.
+    ###################################################################
+    parker =  lambda v, r, t : c_s \
+                               * (r_c(c_s(t)) / r)**2 \
+                               * np.exp(-(2 * r_c(c_s(t))) / r + 3 / 2) \
+                               - v * np.exp(-v**2 / (2 * c_s(t)**2))
 
+    ###################################################################
+    #   Set the radial bins from the center (2R_sol) to the outer
+    #   rim (1AU). This array will be iterated over to determine the
+    #   solar wind for each distance.
+    #   Also set the temperatures for which the the wind shall be
+    #   determined.
+    ###################################################################
+    radii = np.linspace(2 * u.R_sun, 1 * u.au, 99, True)
+    temps = np.linspace(2e6 * u.K, 10e6 * u.K, 5, True)
+
+    ###################################################################
+    #   Compute the wind velocities.
+    #   TODO: Finish computation of velocities, also sth is wron with
+    #         parker function .. I think. Dont know whats goin on here.
+    ###################################################################
+    for r in radii:
+        for t in temps:
+            bisection(parker(v, r, t),
+                      )
+
+    print(temps)
 
 if __name__ == '__main__':
     main()
