@@ -3,7 +3,7 @@
 Literature/
 Presentations/
 
-# Exclude saved plots. They saved as .svg files.
+# Exclude saved plots. They are saved as .svg and .pdf files.
 # 
 Exercises/Assignment_*/Task_*/*.svg
 Exercises/Assignemnt_*/Task_*/*.pdf
