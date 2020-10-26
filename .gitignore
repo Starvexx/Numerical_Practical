@@ -6,3 +6,4 @@ Presentations/
 # Exclude saved plots. They saved as .svg files.
 # 
 Exercises/Assignment_*/Task_*/*.svg
+Exercises/Assignemnt_*/Task_*/*.pdf
