@@ -10,7 +10,7 @@ Exercises/Assignemnt_*/Task_*/*.pdf
 
 # Exclude metafiles in Report folder.
 #
-Exercises/Assignment_*/Report/aa.*
+# Exercises/Assignment_*/Report/aa.*
 Exercises/Assignment_*/Report/*.aux
 Exercises/Assignment_*/Report/*.log
 Exercises/Assignment_*/Report/*.pdf
