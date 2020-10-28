@@ -3,7 +3,15 @@
 Literature/
 Presentations/
 
-# Exclude saved plots. They are saved as .svg and .pdf files.
+# Exclude saved plots. They are saved as .svg and .pdf files
 # 
 Exercises/Assignment_*/Task_*/*.svg
 Exercises/Assignemnt_*/Task_*/*.pdf
+
+# Exclude metafiles in Report folder.
+#
+Exercises/Assignment_*/Report/aa.*
+Exercises/Assignment_*/Report/*.aux
+Exercises/Assignment_*/Report/*.log
+Exercises/Assignment_*/Report/*.pdf
+
