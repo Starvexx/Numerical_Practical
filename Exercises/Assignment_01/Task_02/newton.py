@@ -168,7 +168,7 @@ def main():
     ###################################################################
     #   Create new Matplotlib.pyplot figure with one subplot.
     ###################################################################
-    fig = plt.figure(figsize=(6.3, 3.54))       #   figsize in inches
+    fig = plt.figure(figsize=(3.55659, 3))       #   figsize in inches
     ax = fig.add_subplot(111)
 
     ax.grid(True, which='both',     #   Draw grid
@@ -177,22 +177,22 @@ def main():
     ax.axhline(linewidth=0.5,         #   Draw actual solution for the
              color='red',           #   first equation.
              y=-1.3247,
-             label='solution f1')
+             label='sol \(f_1\)')
     ax.scatter(range(len(interim_1)),   #   Plot results from numerical
                interim_1,               #   approximation.
                marker='x',
                color='red',
-               label='approximation f1')
+               label='approx \(f_1\)')
 
     ax.axhline(linewidth=0.5,         #   Draw actual solution for the
              color='blue',          #   second equation.
              y=0.4502,
-             label='solution f2')
+             label='sol \(f_2\)')
     ax.scatter(range(len(interim_2)),   #   Plot results from numerical
                interim_2,               #   approximation.
                marker='x',
                color='blue',
-               label='approximation f2')
+               label='approx \(f_2\)')
 
     ###################################################################
     #   Format the subplot.
@@ -202,16 +202,15 @@ def main():
     ax.set_xlim(0, 20.5)
     ax.set_ylim(-4, 4)
     ax.set_xticks(range(0, 22, 2))
-    ax.set_title('Results from Newton solver')
-    ax.legend()
+    ax.legend(ncol=2)
 
     ###################################################################
     #   Position the subplot within the figure.
     ###################################################################
-    #plt.subplots_adjust(left=0.11,
-    #                    bottom=0.12,
-    #                    right=0.9,
-    #                    top=0.88)
+    plt.subplots_adjust(left=0.13,
+                        bottom=0.13,
+                        right=0.99,
+                        top=0.97)
 
     ###################################################################
     #   Save the figure as vector graphic in the current working

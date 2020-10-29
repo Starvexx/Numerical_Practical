@@ -17,7 +17,7 @@
 
 %\offprints{R. Plemmons, \email{plemmons@... plemmons@...}
 
-\institute{Universit\"at Wien, Institut für Astrophysik, T\"urkenschanzstrasse
+\institute{Universit\"at Wien, Institut f\"ur Astrophysik, T\"urkenschanzstrasse
 17, 1180 Wien, Austria
 }
 
@@ -25,16 +25,16 @@
 
 \abstract{As a first introduction to numerical computation, three different
 methods were implemented and tested. The first method is a numerical integrator
-using simpsons rule. The numerical integration concludes the first part, whereas
+using Simpson's rule. The numerical integration concludes the first part, whereas
 the second part takes a closer look at two different approaches to function
-solving. One implementaition was done by using the Newton iteration andthe 
+solving. One implementation was done by using the Newton iteration and the 
 second was realized with the bisection method. Since the latter are both
-iterative, recursion was favoured over loops in order to achive a performance
+iterative, recursion was favoured over loops in order to achieve a performance
 boost. However, no benchmarking was done, so it might be possible, that a
 solution involving loops could be just as fast if not faster.}
 
-\keywords{keyword1 -- keyword2 -- keyword3 -- keyword4 
--- keyword5 -- keyword6}
+\keywords{Numerical Integration -- Simpson's rule -- Numerical equation solving 
+-- Newton method -- Bisection method -- Parker wind}
 \maketitle 
 
 \section{Simpson integration}%
@@ -64,6 +64,16 @@ If we now want to adapt this for \(n\) integration steps we get the following:
         & + 2\Big(f_2 + f_4 + \dots + f_{2n-2}\Big)\bigg]
     \end{split}
 \end{equation}
+\begin{figure}[tbp]
+    \resizebox{\hsize}{!}{\includegraphics{../Task_01/simpson_results.pdf}}
+    \caption{The result of the numerical integration of the integral in Equ.
+    \ref{equ:test_integral} using Simpson's rule.. The solid black line to the 
+    bottom represents the analytical solution of the integral which is 
+    \(\pi + 4 \approx 7.142\). Also apparent in this plot is, that the solution 
+    converges very fast. Using ten steps brings us already very close to the 
+    true solution.}
+    \label{fig:Simpson_results}
+\end{figure}
 This scheme assumes that there are \(2*n + 1\) evaluation points for the
 function that shall be integrated. Therefore, the first implementing this method
 is to work out the number of evaluation points from the number of integration
@@ -71,7 +81,7 @@ steps. Next we have to determine the width \(\Delta x = (b - a)/2\) of the
 individual steps. In the script the function values of all evaluation points are
 stored into a \verb+numpy.array\verb+ object. By doing so, it is quite easy to
 access the odd and even indices of the function values whilst leaving out the
-first and last, using slices. Finally the the function values are summed up
+first and last, using slices. Finally the function values are summed up
 according to Equ. \ref{equ:simpson}.
 
 To test the algorithm, the following integral was computed with integration
@@ -80,22 +90,13 @@ steps ranging from 1 to 10000.
     \label{equ:test_integral}
     \int\limits_0^{2\pi} (2\sin(x) + 1) dx
 \end{equation}
-The result with respect to the number of integrationsteps is plotted in Fig.
+The result with respect to the number of integration steps is plotted in Fig.
 \ref{fig:Simpson_results}.
-\begin{figure}[htbp]
-    \resizebox{\hsize}{!}{\includegraphics{../Task_01/simpson_results.pdf}}
-    \caption{The result of the numerical integration of the integral in Equ.
-    \ref{equ:test_integral}. The solid black line to the bottom represents the
-    analytical solution of the integral which is \(\pi + 4 \approx 7.142\). Also
-    apparent in this plot is, that the solution converges very fast. Using ten
-    steps brings us already very close to the true solution.}
-    \label{fig:Simpson_results}
-\end{figure}
 
 \section{Newton-Raphson solver}%
 \label{sec:newton_raphson_solver}
 
-One way to numercally solve an equation \(f(x) = 0\) with respect to \(x\) is
+One way to numerically solve an equation \(f(x) = 0\) with respect to \(x\) is
 given by the following equation:
 \begin{equation}
     \label{equ:newton_iterator}
@@ -107,12 +108,12 @@ method, however, is in need of a initial guess of the solution. If there is only
 one solution, this can be any number. But if there are more than one solution,
 it is best to make a good guess that lies close to the desired solution. The
 intrinsic nature of this method calls for a recursive approach, where the solver
-function is called once by the user with the initial gues, and every following
+function is called once by the user with the initial guess, and every following
 invocation to further improve the approximation is done by the function itself,
 with the new "initial" guess being the previous estimate. For this to work, we
-need a break condition, or else the function would infinitely recurse. With
+need a break condition, or else the function would infinitely recurs. With
 python this is not a big deal, as there are internal mechanisms preventing any
-fatal errors to occure, unlike with other programing languages such as C++,
+fatal errors to occur, unlike with other programming languages such as C++,
 where this could lead to a segmentation fault. The main break condition used for
 this problem is the difference \(|x_{i+1} - x_i|\) between two consecutive
 estimators. Once the difference is less than a user defined tolerance, it is
@@ -125,14 +126,17 @@ The Newton method has been tested with two different equations:
 \end{eqnarray}
 As initial guess, 0 was used for both equations. As can be seen in Fig.
 \ref{fig:Newton_results}, the two solutions converge at different speed.
-\begin{figure}[htbp]
+\begin{figure}[tbp]
     \resizebox{\hsize}{!}{\includegraphics{../Task_02/newton_results.pdf}}
-    \caption{The solutions of the two test equations Eqs.
-    \ref{equ:newton_test_1} and \ref{equ:newton_test_2} converge after a
-    different number of iterations. This is due to the fact that one solutions
-    lies closer to the initial guess than the other. The solution for Equ.
-    \ref{equ:newton_test_1} is \(-1.325\) and for Equ. \ref{equ:newton_test_2}
-    it is \(0.450\).}
+    \caption{Here we see the intermediate steps the Newton method takes to
+    finally converge on the solution of the equations.
+    The x-axis are the number of iterations whereas the y-axis is the 
+    value of the guesses or the solutions to the equations. The solutions of the
+    two test equations Eqs. \ref{equ:newton_test_1} and \ref{equ:newton_test_2} 
+    converge after a different number of iterations. This is due to the fact 
+    that one solutions lies closer to the initial guess than the other. The 
+    solution for Equ. \ref{equ:newton_test_1} is \(-1.325\) and for Equ. 
+    \ref{equ:newton_test_2} it is \(0.450\).}
     \label{fig:Newton_results}
 \end{figure}
 To get to the solution of the first equation 21 iterations are needed. The
@@ -144,6 +148,17 @@ solution before it converged in on \(-1.325\).
 \section{Bisection solver}%
 \label{sec:bisection_solver}
 
+\begin{figure}[tbp]
+    \resizebox{\hsize}{!}{\includegraphics{../Task_03/parker_results.pdf}}
+    \caption{This plot shows the expected stellar winds speeds for a star with
+    the same mass and radius as our own sun. The x-axis is the distance from the
+    central star given in solar radii \SI{}{\Rsol} and the y-axis
+    represents the velocity of the wind given in \SI{}{\kilo\meter\per\second}.
+    The computation was done for temperatures starting at \SI{2}{\mega\kelvin}
+    with \SI{2}{\mega\kelvin} steps up to \SI{10}{\mega\kelvin} within a 
+    distance range from \SI{2}{\Rsol} to \SI{1}{\AU}.}
+    \label{fig:Parker_results}
+\end{figure}
 Yet another method to solve an equation \(f(x) = 0\) with respect to \(x\). The
 difference to the Newton solver discussed in Sec.
 \ref{sec:newton_raphson_solver} is that it does not make use of the derivative
@@ -167,9 +182,9 @@ determined which new boundaries to use, a new midpoint is calculated and the
 procedure is repeated so long until the result of \(f(c)\) approaches zero 
 within a user defined tolerance.
 
-As was the case with the Newton method, a recursive implemention is possible
+As was the case with the Newton method, a recursive implementation is possible
 where the function again calls itself with the new search interval as long as
-the main break condition \(f(c) < \mathrm{tolerance}\) is not fullfilled.
+the main break condition \(f(c) < \mathrm{tolerance}\) is not fulfilled.
 
 \subsection{Parker wind}%
 \label{ssub:parker_wind}
@@ -181,21 +196,28 @@ To test the bisection method, the Parker wind equation was used, see Equ.
     v \exp \left(-\frac{v^2}{2c_s^2}\right) = c_s \left(\frac{r_c}{r}\right)^2
     \exp \left(- \frac{2r_c}{r} + \frac{3}{2}\right)
 \end{equation}
-However, to use the bisection method on this equation it had to be rarranged to
+However, to use the bisection method on this equation it had to be rearranged to
 the following form.
 \begin{equation}
     \label{equ:parker_alternate}
     c_s \left(\frac{r_c}{r}\right)^2 \exp \left(-\frac{2r_c}{r} + \frac{3}{2}\right)
     -v \exp \left(- \frac{v^2}{2c_s^2}\right) = 0
 \end{equation}
-n order to compute the windspeeds within \SI{1}{\AU} of the Sun,
-\begin{figure}[htbp]
-    \resizebox{\hsize}{!}{\includegraphics{../Task_03/parker_results.pdf}}
-    \caption{An estimation of the windspeeds at different radii ranging from
-    \SI{2}{\Rsol} to \SI{1}{\AU}. The progression was done for temperatures
-    starting at \SI{2}{\mega\kelvin} with \SI{2}{\mega\kelvin} steps up to
-    \SI{10}{\mega\kelvin}.}
-    \label{fig:Parker_results}
-\end{figure}
-
+In order to compute the wind speeds within \SI{1}{\AU} of the Sun, it was
+necessary to divide the distance up into individual steps using numpy's linspace
+function. The same was done for the five different temperatures. Finally using
+two for loops the wind speed is determined for each temperature and distance,
+storing the result to a 2D list of which the first axis corresponds to the
+temperature and the second to the radial bins. For the result to be correct a
+minor distinction had to be made before the bisection method was applied. The
+problem with Equ. \ref{equ:parker_alternate} is that it has more than one
+solution and the boundaries of the initial search interval had to be set
+differently for radii smaller than the critical radius \(r_c(T)\), at a given
+temperature. As long as the from the star stays below \(r_c\) we expect sub
+sonic wind speeds, hence the boundaries are set to \(a=0\) and \(b=c_s(T)\).
+Once the distance crosses the critical radius super sonic velocities are
+solutions to this problem and the boundaries are set to \(a=c_s(T)\) and
+\(b=20e6\). Units for the boundaries are meters per second
+\([\SI{}{\meter\per\second}]\). The results can be seen in Fig. 
+\ref{fig:Parker_results}.
 \end{document}

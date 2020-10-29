@@ -6,7 +6,7 @@
     e-Mail:     david.hernandez@univie.ac.at
 
 Another method for solving equations is the bisection method. Just
-like the Newtin method, it is an iterative approach that hones in on
+like the Newton method, it is an iterative approach that hones in on
 the solution.
 """
 
@@ -39,14 +39,14 @@ def bisection(function=lambda x : np.sin(x),
           If changed adapt docstring to the changes!
 
     This method for equation solving depends on a function f(x) in an
-    interval [a, b]. If the the function evaluated at a has a different
+    interval [a, b]. If the function evaluated at a has a different
     sign compared to it evaluated at b, there is a solution for
     f(x) = 0 | a < x < b. In the next step the function is evaluated at
     c = a + ((a + b) / 2) and we determine if the solution lies to the
     left of c or to the right. This again is done by analyzing the
     signs of f(a), f(c) and f(b). If the solution lies in the interval
     [a, c], f(a) will have a different sign from f(c). If the solution
-    is to be found in the interfal [c, b], f(c) will have a sign
+    is to be found in the interval [c, b], f(c) will have a sign
     differing from f(b). This analysis is repeated until f(c) is
     smaller than a tolerance value. Usually the tolerance is a value
     between 10e-4 and 10e-7. Since this method depends on iteration, a
@@ -56,7 +56,7 @@ def bisection(function=lambda x : np.sin(x),
     -----------
     function : lambda function or function
         The function f(x) in the equation f(x) = 0 for which the
-        solutiopn x shall be determined.
+        solution x shall be determined.
     lower : scalar
         The lower boundary of the solution interval [a, b].
     upper : scalar
@@ -67,7 +67,7 @@ def bisection(function=lambda x : np.sin(x),
         Recursion counter, is only to be used within the function to
         count the function calls. This parameter shall in general not
         be changed by the user. However, if a problem may be solved
-        by a larger recursion depth, a negave value may be set by the
+        by a larger recursion depth, a negative value may be set by the
         user in order to increase the maximum number of recursions.
         Use with caution.
 
@@ -103,7 +103,7 @@ def bisection(function=lambda x : np.sin(x),
     f_upper = function(upper)
 
     ###################################################################
-    #   Define a fuinction to determine the sign of a value. Returns
+    #   Define a function to determine the sign of a value. Returns
     #   True if the value is negative and False if the value is
     #   positive.
     ###################################################################
@@ -122,7 +122,7 @@ def bisection(function=lambda x : np.sin(x),
     ###################################################################
     if rec_depth > max_depth:
         err_msg = f'Maximum of {max_depth} iterations passed and no '\
-                  + f'convergence occured.'
+                  + f'convergence occurred.'
         raise RecursionError(err_msg)
 
     ###################################################################
@@ -134,7 +134,7 @@ def bisection(function=lambda x : np.sin(x),
     #   recursed with a = c and b = b.
     ###################################################################
     if np.abs(f_mid) < tolerance:
-        print(f'Solution converged after {rec_depth} iterations.\n')
+        # print(f'Solution converged after {rec_depth} iterations.\n')
         return mid.value
     else:
         if (sign(f_lower) != sign(f_mid)):
@@ -154,7 +154,7 @@ def bisection(function=lambda x : np.sin(x),
 def plot(x, y):
     """A simple plotting function.
 
-    This function plots the results of the calculation of the parker
+    This function plots the results of the calculation of the Parker
     wind.
 
     Parameters:
@@ -175,7 +175,7 @@ def plot(x, y):
     ###################################################################
     #   Create new matplotlib.pyplot figure with subplots.
     ###################################################################
-    fig = plt.figure(figsize=(6.3, 3.54))       #   figsize in inches
+    fig = plt.figure(figsize=(3.55659,3))       #   figsize in inches
 
     ###################################################################
     #   Plot the data.
@@ -185,7 +185,7 @@ def plot(x, y):
     ax.grid(True, which='both', linewidth=0.5)
 
     ###################################################################
-    #   Define different colors, labels and linestyles for the
+    #   Define different colors, labels and line styles for the
     #   different temperatures.
     ###################################################################
     colors=['red', 'blue', 'brown', 'magenta', 'cyan']
@@ -197,7 +197,6 @@ def plot(x, y):
     ###################################################################
     #   Format the subplot.
     ###################################################################
-    ax.set_title('Parker wind speeds for different temperatures')
     ax.set_xlabel('distance [\(\mathrm{R}_\odot\)]')
     ax.set_ylabel('velocity [\(\mathrm{km}/\mathrm{s}\)]')
     ax.legend(ncol=2)
@@ -205,10 +204,10 @@ def plot(x, y):
     ###################################################################
     #   Position the subplot within the figure.
     ###################################################################
-    plt.subplots_adjust(left=0.11,
-                        bottom=0.15,
-                        right=0.9,
-                        top=0.88)
+    plt.subplots_adjust(left=0.165,
+                        bottom=0.14,
+                        right=0.99,
+                        top=0.99)
 
     ###################################################################
     #   Save the Figure as vector graphic in the current working
@@ -217,7 +216,7 @@ def plot(x, y):
     plt.savefig('parker_results.svg', format='svg')
 
     ###################################################################
-    #   Show the plot in in a popup window.
+    #   Show the plot in in a pop-up window.
     ###################################################################
     plt.show()
 
@@ -251,7 +250,7 @@ def main():
     #   Set the radial bins from the center (2R_sol) to the outer
     #   rim (1AU). This array will be iterated over to determine the
     #   solar wind for each distance.
-    #   Also set the temperatures for which the the wind shall be
+    #   Also set the temperatures for which the wind shall be 
     #   determined.
     ###################################################################
     r_1 = (2 * u.R_sun)
@@ -269,8 +268,8 @@ def main():
     #   matrix elements. A distinction had to be made for the case of
     #   supersonic and subsonic winds. For distances smaller than the
     #   critical radius r_c(T) we expect the solution to lie somewhere
-    #   between 0 km/s and c_s(T), wheras for distances greater than 
-    #   r_c the speeds lie between c_s(T) and an arbitraty high upper
+    #   between 0 km/s and c_s(T), whereas for distances greater than 
+    #   r_c the speeds lie between c_s(T) and an arbitrary high upper
     #   limit. Here c_s(T) is the speed of sound at temperature T and
     #   r_c(T) is the critical radius for certain sound speed c_s(T),
     #   hence the dependence on T for the critical radius.

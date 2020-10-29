@@ -46,14 +46,14 @@ from matplotlib import pyplot as plt
 #######################################################################
 
 def simpson(n=1, lower=0, upper=1, function=lambda x : np.sin(x)):
-    """ Integrate numerically using the simpson rule.
+    """ Integrate numerically using the Simpson rule.
 
-    This function does the numerical integration using simpsons rule.
+    This function does the numerical integration using Simpson's rule.
 
     Parameters
     ----------
     n : scalar
-        The number of intervals or integrationsteps.
+        The number of intervals or integration steps.
     lower : scalar
         The lower boundary of the definite integral.
     upper : scalar
@@ -101,7 +101,7 @@ def simpson(n=1, lower=0, upper=1, function=lambda x : np.sin(x)):
         ###############################################################
         fvals = function
     else:
-        err_msg = 'Invalid data type. function must me a '\
+        err_msg = 'Invalid data type. Function must me a '\
                   + 'numpy.array or function.'
         raise TypeError(err_msg)
 
@@ -111,9 +111,9 @@ def simpson(n=1, lower=0, upper=1, function=lambda x : np.sin(x)):
     delta_x = (upper - lower) / n
 
     ###################################################################
-    #   By slicing the fval array smart, the functionvalues with the
+    #   By slicing the fval array smart, the function values with the
     #   odd and even indices are separated so that they can be used
-    #   conveniently in simpsons rule.
+    #   conveniently in Simpson's rule.
     ###################################################################
     result = delta_x / 6 * (fvals[0]
                             + fvals[2*n]
@@ -133,14 +133,14 @@ def pretty_print(expression=None, lower=None, upper=None, value=None,
 
 
 def plotting(results, steps):
-    """Plot the results with respect to integrationsteps.
+    """Plot the results with respect to integration steps.
 
     Parameters
     ----------
     results : list or numpy.array
         The results that are to be plotted.
     steps : list or np.array
-        The number of steps that correspond to the achived results.
+        The number of steps that correspond to the achieved results.
     """
 
     ###################################################################
@@ -154,7 +154,7 @@ def plotting(results, steps):
     ###################################################################
     #   Create new matplotlib.pyplot figure with one subplot.
     ###################################################################
-    fig = plt.figure(figsize=(6.3, 3.54))       #   figsize in inches
+    fig = plt.figure(figsize=(3.55659, 3))       #   figsize in inches
     ax = fig.add_subplot(111)
 
     ax.grid(True, which='both',     #   Draw grid
@@ -176,16 +176,15 @@ def plotting(results, steps):
     ax.set_xlabel('steps')
     ax.set_ylabel('result')
     ax.set_ylim(7.13, 7.35)
-    ax.set_title('Results using different integration steps')
     ax.legend()
 
     ###################################################################
     #   Position the subplot within the figure.
     ###################################################################
-    plt.subplots_adjust(left=0.11,
-                        bottom=0.12,
-                        right=0.9,
-                        top=.88)
+    plt.subplots_adjust(left=0.175,
+                        bottom=0.14,
+                        right=0.985,
+                        top=.975)
 
     ###################################################################
     #   Save the figure as vector graphic in the current working
@@ -193,7 +192,7 @@ def plotting(results, steps):
     ###################################################################
     plt.savefig('simpson_results.svg', format='svg')
     ###################################################################
-    #   Show the plot in a popup window.
+    #   Show the plot in a pop-up window.
     ###################################################################
     plt.show()
 
@@ -217,7 +216,7 @@ def main():
 
     ###################################################################
     #   Populate the results list with the results when different
-    #   numbers of integrationsteps are used.
+    #   numbers of integration steps are used.
     ###################################################################
     results = [simpson(n=steps,
                        lower=a,
@@ -233,13 +232,13 @@ def main():
                      function=f)
 
     ###################################################################
-    #   Print the result using multiline unicode output.
+    #   Print the result using multi line Unicode output.
     ###################################################################
     pretty_print(expression='2*sin(x)+1',
                  lower=0,
                  upper='π',
                  value=result)
-    print(f'with {steps_list[12]} integrationsteps.')
+    print(f'with {steps_list[12]} integration steps.')
 
     ###################################################################
     #   Plot the results when using different numbers of integration
