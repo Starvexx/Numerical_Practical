@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+
+<html  dir="ltr" lang="de" xml:lang="de">
+<head>
+    <title>Moodle-Service der Universität Wien</title>
+    <link rel="shortcut icon" href="https://moodle.univie.ac.at/theme/university_boost/subthemes/uniwien/favicon.ico" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="keywords" content="moodle, Moodle-Service der Universität Wien" />
+<link rel="stylesheet" type="text/css" href="https://moodle.univie.ac.at/theme/yui_combo.php?rollup/3.17.2/yui-moodlesimple-min.css" /><script id="firstthemesheet" type="text/css">/** Required in order to fix style inclusion problems in IE with YUI **/</script><link rel="stylesheet" type="text/css" href="https://moodle.univie.ac.at/theme/styles.php/university_boost/1604196672_1601932963/all" />
+<script>
+//<![CDATA[
+var M = {}; M.yui = {};
+M.pageloadstarttime = new Date();
+M.cfg = {"wwwroot":"https:\/\/moodle.univie.ac.at","sesskey":"dnzlopIiF6","sessiontimeout":"14400","themerev":"1604196672","slasharguments":1,"theme":"university_boost","iconsystemmodule":"core\/icon_system_fontawesome","jsrev":"1604196672","admin":"admin","svgicons":true,"usertimezone":"Europa\/Wien","contextid":1,"langrev":1604545343,"templaterev":"1604196672"};var yui1ConfigFn = function(me) {if(/-skin|reset|fonts|grids|base/.test(me.name)){me.type='css';me.path=me.path.replace(/\.js/,'.css');me.path=me.path.replace(/\/yui2-skin/,'/assets/skins/sam/yui2-skin')}};
+var yui2ConfigFn = function(me) {var parts=me.name.replace(/^moodle-/,'').split('-'),component=parts.shift(),module=parts[0],min='-min';if(/-(skin|core)$/.test(me.name)){parts.pop();me.type='css';min=''}
+if(module){var filename=parts.join('-');me.path=component+'/'+module+'/'+filename+min+'.'+me.type}else{me.path=component+'/'+component+'.'+me.type}};
+YUI_config = {"debug":false,"base":"https:\/\/moodle.univie.ac.at\/lib\/yuilib\/3.17.2\/","comboBase":"https:\/\/moodle.univie.ac.at\/theme\/yui_combo.php?","combine":true,"filter":null,"insertBefore":"firstthemesheet","groups":{"yui2":{"base":"https:\/\/moodle.univie.ac.at\/lib\/yuilib\/2in3\/2.9.0\/build\/","comboBase":"https:\/\/moodle.univie.ac.at\/theme\/yui_combo.php?","combine":true,"ext":false,"root":"2in3\/2.9.0\/build\/","patterns":{"yui2-":{"group":"yui2","configFn":yui1ConfigFn}}},"moodle":{"name":"moodle","base":"https:\/\/moodle.univie.ac.at\/theme\/yui_combo.php?m\/1604196672\/","combine":true,"comboBase":"https:\/\/moodle.univie.ac.at\/theme\/yui_combo.php?","ext":false,"root":"m\/1604196672\/","patterns":{"moodle-":{"group":"moodle","configFn":yui2ConfigFn}},"filter":null,"modules":{"moodle-core-actionmenu":{"requires":["base","event","node-event-simulate"]},"moodle-core-blocks":{"requires":["base","node","io","dom","dd","dd-scroll","moodle-core-dragdrop","moodle-core-notification"]},"moodle-core-chooserdialogue":{"requires":["base","panel","moodle-core-notification"]},"moodle-core-dragdrop":{"requires":["base","node","io","dom","dd","event-key","event-focus","moodle-core-notification"]},"moodle-core-event":{"requires":["event-custom"]},"moodle-core-formchangechecker":{"requires":["base","event-focus","moodle-core-event"]},"moodle-core-handlebars":{"condition":{"trigger":"handlebars","when":"after"}},"moodle-core-languninstallconfirm":{"requires":["base","node","moodle-core-notification-confirm","moodle-core-notification-alert"]},"moodle-core-lockscroll":{"requires":["plugin","base-build"]},"moodle-core-maintenancemodetimer":{"requires":["base","node"]},"moodle-core-notification":{"requires":["moodle-core-notification-dialogue","moodle-core-notification-alert","moodle-core-notification-confirm","moodle-core-notification-exception","moodle-core-notification-ajaxexception"]},"moodle-core-notification-dialogue":{"requires":["base","node","panel","escape","event-key","dd-plugin","moodle-core-widget-focusafterclose","moodle-core-lockscroll"]},"moodle-core-notification-alert":{"requires":["moodle-core-notification-dialogue"]},"moodle-core-notification-confirm":{"requires":["moodle-core-notification-dialogue"]},"moodle-core-notification-exception":{"requires":["moodle-core-notification-dialogue"]},"moodle-core-notification-ajaxexception":{"requires":["moodle-core-notification-dialogue"]},"moodle-core-popuphelp":{"requires":["moodle-core-tooltip"]},"moodle-core-tooltip":{"requires":["base","node","io-base","moodle-core-notification-dialogue","json-parse","widget-position","widget-position-align","event-outside","cache-base"]},"moodle-core_availability-form":{"requires":["base","node","event","event-delegate","panel","moodle-core-notification-dialogue","json"]},"moodle-backup-backupselectall":{"requires":["node","event","node-event-simulate","anim"]},"moodle-backup-confirmcancel":{"requires":["node","node-event-simulate","moodle-core-notification-confirm"]},"moodle-course-categoryexpander":{"requires":["node","event-key"]},"moodle-course-dragdrop":{"requires":["base","node","io","dom","dd","dd-scroll","moodle-core-dragdrop","moodle-core-notification","moodle-course-coursebase","moodle-course-util"]},"moodle-course-formatchooser":{"requires":["base","node","node-event-simulate"]},"moodle-course-management":{"requires":["base","node","io-base","moodle-core-notification-exception","json-parse","dd-constrain","dd-proxy","dd-drop","dd-delegate","node-event-delegate"]},"moodle-course-util":{"requires":["node"],"use":["moodle-course-util-base"],"submodules":{"moodle-course-util-base":{},"moodle-course-util-section":{"requires":["node","moodle-course-util-base"]},"moodle-course-util-cm":{"requires":["node","moodle-course-util-base"]}}},"moodle-form-dateselector":{"requires":["base","node","overlay","calendar"]},"moodle-form-passwordunmask":{"requires":[]},"moodle-form-shortforms":{"requires":["node","base","selector-css3","moodle-core-event"]},"moodle-question-chooser":{"requires":["moodle-core-chooserdialogue"]},"moodle-question-preview":{"requires":["base","dom","event-delegate","event-key","core_question_engine"]},"moodle-question-searchform":{"requires":["base","node"]},"moodle-availability_completion-form":{"requires":["base","node","event","moodle-core_availability-form"]},"moodle-availability_date-form":{"requires":["base","node","event","io","moodle-core_availability-form"]},"moodle-availability_grade-form":{"requires":["base","node","event","moodle-core_availability-form"]},"moodle-availability_group-form":{"requires":["base","node","event","moodle-core_availability-form"]},"moodle-availability_grouping-form":{"requires":["base","node","event","moodle-core_availability-form"]},"moodle-availability_ip-form":{"requires":["base","node","event","io","moodle-core_availability-form"]},"moodle-availability_profile-form":{"requires":["base","node","event","moodle-core_availability-form"]},"moodle-availability_xp-form":{"requires":["base","node","event","handlebars","moodle-core_availability-form"]},"moodle-mod_assign-history":{"requires":["node","transition"]},"moodle-mod_attendance-groupfilter":{"requires":["base","node"]},"moodle-mod_bigbluebuttonbn-broker":{"requires":["base","node","datasource-get","datasource-jsonschema","datasource-polling","moodle-core-notification"]},"moodle-mod_bigbluebuttonbn-imports":{"requires":["base","node"]},"moodle-mod_bigbluebuttonbn-modform":{"requires":["base","node"]},"moodle-mod_bigbluebuttonbn-recordings":{"requires":["base","node","datasource-get","datasource-jsonschema","datasource-polling","moodle-core-notification"]},"moodle-mod_bigbluebuttonbn-rooms":{"requires":["base","node","datasource-get","datasource-jsonschema","datasource-polling","moodle-core-notification"]},"moodle-mod_checklist-linkselect":{"requires":["node","event-valuechange"]},"moodle-mod_customcert-rearrange":{"requires":["dd-delegate","dd-drag"]},"moodle-mod_offlinequiz-autosave":{"requires":["base","node","event","event-valuechange","node-event-delegate","io-form"]},"moodle-mod_offlinequiz-dragdrop":{"requires":["base","node","io","dom","dd","dd-scroll","moodle-core-dragdrop","moodle-core-notification","moodle-mod_offlinequiz-offlinequizbase","moodle-mod_offlinequiz-util-base","moodle-mod_offlinequiz-util-page","moodle-mod_offlinequiz-util-slot","moodle-course-util"]},"moodle-mod_offlinequiz-modform":{"requires":["base","node","event"]},"moodle-mod_offlinequiz-offlinequizbase":{"requires":["base","node"]},"moodle-mod_offlinequiz-offlinequizquestionbank":{"requires":["base","event","node","io","io-form","yui-later","moodle-question-qbankmanager","moodle-question-chooser","moodle-question-searchform","moodle-core-notification"]},"moodle-mod_offlinequiz-questionchooser":{"requires":["moodle-core-chooserdialogue","moodle-mod_offlinequiz-util","querystring-parse"]},"moodle-mod_offlinequiz-randomquestion":{"requires":["base","event","node","io","moodle-core-notification-dialogue"]},"moodle-mod_offlinequiz-repaginate":{"requires":["base","event","node","io","moodle-core-notification-dialogue"]},"moodle-mod_offlinequiz-toolboxes":{"requires":["base","node","event","event-key","io","moodle-mod_offlinequiz-offlinequizbase","moodle-mod_offlinequiz-util-slot","moodle-core-notification-ajaxexception"]},"moodle-mod_offlinequiz-util":{"requires":["node"],"use":["moodle-mod_offlinequiz-util-base"],"submodules":{"moodle-mod_offlinequiz-util-base":{},"moodle-mod_offlinequiz-util-slot":{"requires":["node","moodle-mod_offlinequiz-util-base"]},"moodle-mod_offlinequiz-util-page":{"requires":["node","moodle-mod_offlinequiz-util-base"]}}},"moodle-mod_quiz-autosave":{"requires":["base","node","event","event-valuechange","node-event-delegate","io-form"]},"moodle-mod_quiz-dragdrop":{"requires":["base","node","io","dom","dd","dd-scroll","moodle-core-dragdrop","moodle-core-notification","moodle-mod_quiz-quizbase","moodle-mod_quiz-util-base","moodle-mod_quiz-util-page","moodle-mod_quiz-util-slot","moodle-course-util"]},"moodle-mod_quiz-modform":{"requires":["base","node","event"]},"moodle-mod_quiz-questionchooser":{"requires":["moodle-core-chooserdialogue","moodle-mod_quiz-util","querystring-parse"]},"moodle-mod_quiz-quizbase":{"requires":["base","node"]},"moodle-mod_quiz-toolboxes":{"requires":["base","node","event","event-key","io","moodle-mod_quiz-quizbase","moodle-mod_quiz-util-slot","moodle-core-notification-ajaxexception"]},"moodle-mod_quiz-util":{"requires":["node","moodle-core-actionmenu"],"use":["moodle-mod_quiz-util-base"],"submodules":{"moodle-mod_quiz-util-base":{},"moodle-mod_quiz-util-slot":{"requires":["node","moodle-mod_quiz-util-base"]},"moodle-mod_quiz-util-page":{"requires":["node","moodle-mod_quiz-util-base"]}}},"moodle-message_airnotifier-toolboxes":{"requires":["base","node","io"]},"moodle-block_xp-filters":{"requires":["base","node","moodle-core-dragdrop","moodle-block_xp-rulepicker"]},"moodle-block_xp-notification":{"requires":["base","node","handlebars","button-plugin","moodle-core-notification-dialogue"]},"moodle-block_xp-rulepicker":{"requires":["base","node","handlebars","moodle-core-notification-dialogue"]},"moodle-filter_glossary-autolinker":{"requires":["base","node","io-base","json-parse","event-delegate","overlay","moodle-core-event","moodle-core-notification-alert","moodle-core-notification-exception","moodle-core-notification-ajaxexception"]},"moodle-filter_mathjaxloader-loader":{"requires":["moodle-core-event"]},"moodle-editor_atto-editor":{"requires":["node","transition","io","overlay","escape","event","event-simulate","event-custom","node-event-html5","node-event-simulate","yui-throttle","moodle-core-notification-dialogue","moodle-core-notification-confirm","moodle-editor_atto-rangy","handlebars","timers","querystring-stringify"]},"moodle-editor_atto-plugin":{"requires":["node","base","escape","event","event-outside","handlebars","event-custom","timers","moodle-editor_atto-menu"]},"moodle-editor_atto-menu":{"requires":["moodle-core-notification-dialogue","node","event","event-custom"]},"moodle-editor_atto-rangy":{"requires":[]},"moodle-report_eventlist-eventfilter":{"requires":["base","event","node","node-event-delegate","datatable","autocomplete","autocomplete-filters"]},"moodle-report_loglive-fetchlogs":{"requires":["base","event","node","io","node-event-delegate"]},"moodle-gradereport_grader-gradereporttable":{"requires":["base","node","event","handlebars","overlay","event-hover"]},"moodle-gradereport_history-userselector":{"requires":["escape","event-delegate","event-key","handlebars","io-base","json-parse","moodle-core-notification-dialogue"]},"moodle-tool_capability-search":{"requires":["base","node"]},"moodle-tool_lp-dragdrop-reorder":{"requires":["moodle-core-dragdrop"]},"moodle-tool_monitor-dropdown":{"requires":["base","event","node"]},"moodle-local_kaltura-lticontainer":{"requires":["base","node"]},"moodle-local_kaltura-ltipanel":{"requires":["base","node","panel","node-event-simulate"]},"moodle-local_kaltura-ltiservice":{"requires":["base","node","node-event-simulate"]},"moodle-local_kaltura-ltitinymcepanel":{"requires":["base","node","panel","node-event-simulate"]},"moodle-assignfeedback_editpdf-editor":{"requires":["base","event","node","io","graphics","json","event-move","event-resize","transition","querystring-stringify-simple","moodle-core-notification-dialog","moodle-core-notification-alert","moodle-core-notification-warning","moodle-core-notification-exception","moodle-core-notification-ajaxexception"]},"moodle-atto_accessibilitychecker-button":{"requires":["color-base","moodle-editor_atto-plugin"]},"moodle-atto_accessibilityhelper-button":{"requires":["moodle-editor_atto-plugin"]},"moodle-atto_align-button":{"requires":["moodle-editor_atto-plugin"]},"moodle-atto_bold-button":{"requires":["moodle-editor_atto-plugin"]},"moodle-atto_bsgrid-button":{"requires":["moodle-editor_atto-plugin"]},"moodle-atto_charmap-button":{"requires":["moodle-editor_atto-plugin"]},"moodle-atto_chemistry-button":{"requires":["moodle-editor_atto-plugin","moodle-core-event","io","event-valuechange","tabview","array-extras"]},"moodle-atto_clear-button":{"requires":["moodle-editor_atto-plugin"]},"moodle-atto_collapse-button":{"requires":["moodle-editor_atto-plugin"]},"moodle-atto_emojipicker-button":{"requires":["moodle-editor_atto-plugin"]},"moodle-atto_emoticon-button":{"requires":["moodle-editor_atto-plugin"]},"moodle-atto_equation-button":{"requires":["moodle-editor_atto-plugin","moodle-core-event","io","event-valuechange","tabview","array-extras"]},"moodle-atto_fullscreen-button":{"requires":["event-resize","moodle-editor_atto-plugin"]},"moodle-atto_h5p-button":{"requires":["moodle-editor_atto-plugin"]},"moodle-atto_hr-button":{"requires":["moodle-editor_atto-plugin"]},"moodle-atto_html-beautify":{},"moodle-atto_html-button":{"requires":["promise","moodle-editor_atto-plugin","moodle-atto_html-beautify","moodle-atto_html-codemirror","event-valuechange"]},"moodle-atto_html-codemirror":{"requires":["moodle-atto_html-codemirror-skin"]},"moodle-atto_htmlplus-beautify":{},"moodle-atto_htmlplus-button":{"requires":["moodle-editor_atto-plugin","moodle-atto_htmlplus-beautify","moodle-atto_htmlplus-codemirror","event-valuechange"]},"moodle-atto_htmlplus-codemirror":{"requires":["moodle-atto_htmlplus-codemirror-skin"]},"moodle-atto_image-button":{"requires":["moodle-editor_atto-plugin"]},"moodle-atto_indent-button":{"requires":["moodle-editor_atto-plugin"]},"moodle-atto_italic-button":{"requires":["moodle-editor_atto-plugin"]},"moodle-atto_kalturamedia-button":{"requires":["moodle-editor_atto-plugin"]},"moodle-atto_link-button":{"requires":["moodle-editor_atto-plugin"]},"moodle-atto_managefiles-button":{"requires":["moodle-editor_atto-plugin"]},"moodle-atto_managefiles-usedfiles":{"requires":["node","escape"]},"moodle-atto_media-button":{"requires":["moodle-editor_atto-plugin","moodle-form-shortforms"]},"moodle-atto_noautolink-button":{"requires":["moodle-editor_atto-plugin"]},"moodle-atto_orderedlist-button":{"requires":["moodle-editor_atto-plugin"]},"moodle-atto_recordrtc-button":{"requires":["moodle-editor_atto-plugin","moodle-atto_recordrtc-recording"]},"moodle-atto_recordrtc-recording":{"requires":["moodle-atto_recordrtc-button"]},"moodle-atto_rtl-button":{"requires":["moodle-editor_atto-plugin"]},"moodle-atto_strike-button":{"requires":["moodle-editor_atto-plugin"]},"moodle-atto_styles-button":{"requires":["moodle-editor_atto-plugin"]},"moodle-atto_subscript-button":{"requires":["moodle-editor_atto-plugin"]},"moodle-atto_superscript-button":{"requires":["moodle-editor_atto-plugin"]},"moodle-atto_table-button":{"requires":["moodle-editor_atto-plugin","moodle-editor_atto-menu","event","event-valuechange"]},"moodle-atto_title-button":{"requires":["moodle-editor_atto-plugin"]},"moodle-atto_underline-button":{"requires":["moodle-editor_atto-plugin"]},"moodle-atto_undo-button":{"requires":["moodle-editor_atto-plugin"]},"moodle-atto_unorderedlist-button":{"requires":["moodle-editor_atto-plugin"]}}},"gallery":{"name":"gallery","base":"https:\/\/moodle.univie.ac.at\/lib\/yuilib\/gallery\/","combine":true,"comboBase":"https:\/\/moodle.univie.ac.at\/theme\/yui_combo.php?","ext":false,"root":"gallery\/1604196672\/","patterns":{"gallery-":{"group":"gallery"}}}},"modules":{"core_filepicker":{"name":"core_filepicker","fullpath":"https:\/\/moodle.univie.ac.at\/lib\/javascript.php\/1604196672\/repository\/filepicker.js","requires":["base","node","node-event-simulate","json","async-queue","io-base","io-upload-iframe","io-form","yui2-treeview","panel","cookie","datatable","datatable-sort","resize-plugin","dd-plugin","escape","moodle-core_filepicker","moodle-core-notification-dialogue"]},"core_comment":{"name":"core_comment","fullpath":"https:\/\/moodle.univie.ac.at\/lib\/javascript.php\/1604196672\/comment\/comment.js","requires":["base","io-base","node","json","yui2-animation","overlay","escape"]},"mathjax":{"name":"mathjax","fullpath":"https:\/\/cdn.jsdelivr.net\/npm\/mathjax@2.7.8\/MathJax.js?delayStartupUntil=configured"}}};
+M.yui.loader = {modules: {}};
+
+//]]>
+</script>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#006699" />
+</head>
+<body  id="page-theme-university_boost-login-index" class="format-site  path-theme path-theme-university_boost path-theme-university_boost-login dir-ltr lang-de yui-skin-sam yui3-skin-sam moodle-univie-ac-at pagelayout-login course-1 context-1 notloggedin has-sticky-navdrawer">
+<div class="toast-wrapper mx-auto py-0 fixed-top" role="status" aria-live="polite"></div>
+
+<div id="page-wrapper">
+
+    <div>
+    <a class="sr-only sr-only-focusable" href="#maincontent">Zum Hauptinhalt</a>
+</div><script src="https://moodle.univie.ac.at/lib/javascript.php/1604196672/lib/babel-polyfill/polyfill.min.js"></script>
+<script src="https://moodle.univie.ac.at/lib/javascript.php/1604196672/lib/polyfills/polyfill.js"></script>
+<script src="https://moodle.univie.ac.at/theme/yui_combo.php?rollup/3.17.2/yui-moodlesimple-min.js"></script><script src="https://moodle.univie.ac.at/lib/javascript.php/1604196672/lib/javascript-static.js"></script>
+<script>
+//<![CDATA[
+document.body.className += ' jsenabled';
+//]]>
+</script>
+
+
+
+    <header role="banner" class="fixed-top navbar-full navbar-light bg-faded navbar-static-top moodle-has-zindex p-0">
+    
+        <div class="container-fluid navbar-nav flex-row">
+    
+    
+            <a href="https://www.univie.ac.at/" target="_blank" class="navbar-brand p-0 has-logo d-none d-sm-flex ml-5 mr-3 align-self-center">
+                <span class="logo">
+                    <img src="https://moodle.univie.ac.at/theme/university_boost/subthemes/uniwien/logo.gif" alt="Moodle Universität Wien">
+                </span>
+            </a>
+    
+            <nav class="nav navbar-nav flex-row d-none d-md-flex">
+                <!-- custom_menu -->
+                <div class="dropdown nav-item">
+    <a class="dropdown-toggle nav-link" id="drop-down-5fa430e5e56845fa430e5e42b04" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" href="#"  aria-controls="drop-down-menu-5fa430e5e56845fa430e5e42b04">
+        Hilfe
+    </a>
+    <div class="dropdown-menu" role="menu" id="drop-down-menu-5fa430e5e56845fa430e5e42b04" aria-labelledby="drop-down-5fa430e5e56845fa430e5e42b04">
+        <a class="dropdown-item focus-menuitem-fix" role="menuitem" style="" href="#"></a>
+                <a class="dropdown-item" role="menuitem" href="https://wiki.univie.ac.at/display/Moodle/Moodle"  >Moodle Anleitungen - WIKI</a>
+                <a class="dropdown-item" role="menuitem" href="https://moodle.univie.ac.at/course/view.php?id=8302"  >Moodle Tutorial</a>
+                <a class="dropdown-item" role="menuitem" href="https://www.univie.ac.at/kursdatenbank/index.html" target=\"_blank"  >Moodle Schulungstermine</a>
+                <a class="dropdown-item" role="menuitem" href="https://wiki.univie.ac.at/display/Moodle/FAQs+-+Studierende"  >Moodle FAQs Studierende</a>
+                <div class="dropdown-divider" role="presentation"></div>
+                <a class="dropdown-item" role="menuitem" href="https://uspace.univie.ac.at/" target=\"_blank"  >u:space</a>
+                <a class="dropdown-item" role="menuitem" href="https://ufind.univie.ac.at/" target=\"_blank"  >u:find</a>
+                <a class="dropdown-item" role="menuitem" href="https://usearch.univie.ac.at" target=\"_blank"  >u:search</a>
+                <a class="dropdown-item" role="menuitem" href="https://univie.ac.at/ZID/e-learning/" target=\"_blank"  >ZID E-Learning</a>
+                <div class="dropdown-divider" role="presentation"></div>
+                <a class="dropdown-item" role="menuitem" href="https://servicedesk.univie.ac.at/servicedesk/customer/portal/16/group/50?groupId=50"  >Servicedesk ZID-Helpdesk</a>
+    </div>
+</div><div class="dropdown nav-item">
+    <a class="dropdown-toggle nav-link" id="drop-down-5fa430e5e57465fa430e5e42b05" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" href="#"  aria-controls="drop-down-menu-5fa430e5e57465fa430e5e42b05">
+        Digitale Lehre
+    </a>
+    <div class="dropdown-menu" role="menu" id="drop-down-menu-5fa430e5e57465fa430e5e42b05" aria-labelledby="drop-down-5fa430e5e57465fa430e5e42b05">
+        <a class="dropdown-item focus-menuitem-fix" role="menuitem" style="" href="#"></a>
+                <a class="dropdown-item" role="menuitem" href="https://ctl.univie.ac.at/lehre-im-wintersemester/umstieg-von-hybrider-zu-digitaler-lehre" target=\"_blank"  ><b>AKTUELLES: Umstieg von hybrider zu digitaler Lehre</b></a>
+                <div class="dropdown-divider" role="presentation"></div>
+                <a class="dropdown-item" role="menuitem" href="https://www.univie.ac.at/ueber-uns/weitere-informationen/coronavirus" target=\"_blank"  >Allgemeines: aktuelle Infos zum Unibetrieb</a>
+                <a class="dropdown-item" role="menuitem" href="https://wiki.univie.ac.at/display/Moodle/Moodle" target=\"_blank"  >Allgemeine Anleitungen - <b>Digitale Lehre mit Moodle</b></a>
+                <div class="dropdown-divider" role="presentation"></div>
+                <a class="dropdown-item" role="menuitem" href="https://studieren.univie.ac.at/lernen-pruefen/" target="_blank"  ><b>Infos für Studierende</b></a>
+                <div class="dropdown-divider" role="presentation"></div>
+                <a class="dropdown-item" role="menuitem" href="https://ctl.univie.ac.at/lehre-im-wintersemester/" target="_blank"  ><b>Infos für Lehrende</b></a>
+                <a class="dropdown-item" role="menuitem" href="https://ctl.univie.ac.at/lehre-im-wintersemester/einstieg/" target="_blank" title="Einstieg" >&raquo;Einstieg</a>
+                <a class="dropdown-item" role="menuitem" href="https://ctl.univie.ac.at/lehre-im-wintersemester/organisatorisches/" target="_blank" title="Organisatorisches" >&raquo;Organisatorisches</a>
+                <a class="dropdown-item" role="menuitem" href="https://ctl.univie.ac.at/lehre-im-wintersemester/lehren/" target="_blank" title="Digital Lehren" >&raquo;Digital Lehren</a>
+                <a class="dropdown-item" role="menuitem" href="https://ctl.univie.ac.at/lehre-im-wintersemester/pruefen/" target="_blank" title="Digital Prüfen" >&raquo;Digital Prüfen</a>
+                <a class="dropdown-item" role="menuitem" href="https://ctl.univie.ac.at/lehre-im-wintersemester/ressourcen/" target="_blank" title="Ressourcen" >&raquo;Ressourcen</a>
+                <a class="dropdown-item" role="menuitem" href="https://intra.univie.ac.at/coronavirus/themen-lehre/" target="_blank" title="INTRANET" >&raquo;INTRANET</a>
+                <a class="dropdown-item" role="menuitem" href="https://moodle.univie.ac.at/course/view.php?id=140531"  ><b>Moodle Newsroom</b></a>
+                <a class="dropdown-item" role="menuitem" href="https://wiki.univie.ac.at/display/Moodle/Online-Sprechstunden/" target="_blank"  ><b>Online Sprechstunden</b></a>
+                <a class="dropdown-item" role="menuitem" href="https://ctl.univie.ac.at/lehre-im-wintersemester/webinare/" target="_blank"  ><b>Online Webinare</b></a>
+                <div class="dropdown-divider" role="presentation"></div>
+                <a class="dropdown-item" role="menuitem" href="https://ctl.univie.ac.at/services-zur-qualitaet-von-studien/digitale-lehre/kontakt/" target="_blank"  >Didaktische Fragen</a>
+                <a class="dropdown-item" role="menuitem" href="https://servicedesk.univie.ac.at/plugins/servlet/desk/portal/7/" target="_blank"  >Technische Fragen</a>
+    </div>
+</div><a class="nav-item nav-link" href="https://moodle.univie.ac.at/my/"  >Dashboard</a>
+                <!-- page_heading_menu -->
+                
+            </nav>
+            <div class="d-flex  mr-auto"></div>
+    
+            <!-- navbar_plugin_output -->
+            
+    
+    
+    
+            <!-- favorites -->
+    
+            <!-- search_box -->
+            <span class="d-none d-md-flex">
+            
+            </span>
+    
+            <!-- user_menu -->
+            <div class="usermenu d-flex"><span class="login">Sie sind nicht angemeldet. (<a href="https://moodle.univie.ac.at/login/index.php">Anmelden</a>)</span></div>
+        </div>
+    </header>
+    
+
+    <div id="page" class="container-fluid">
+        <div id="page-content" class="row">
+            <div id="region-main-box" class="w-100">
+                <section id="region-main" class="col-xs-12">
+                    <span class="notifications" id="user-notifications"></span>
+                    <div role="main"><span id="maincontent"></span><style type="text/css">
+
+    #page-wrapper > header.navbar-full {
+        display: none;
+    }
+    #page-wrapper > #page {
+        margin-top: 0 !important;
+    }
+
+    #page.container-fluid {
+        padding: 0 !important;
+    }
+    #page-content.row {
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+    }
+
+
+    ol.carousel-indicators li {
+        cursor: pointer;
+    }
+
+    @media (min-width: 993px) {
+        .loginpage-box {
+            margin-left: 2.5%;
+            margin-right: 2.5%;
+            background-color: #f2f2f2 !important;
+            border-color: #f2f2f2 !important;
+        }
+
+        .loginpage-box:first-child {
+            margin-left: 10% !important;
+        }
+
+        .loginpage-box:last-child {
+            margin-right: 10% !important;
+        }
+    }
+</style>
+    <div class="">
+        <div class="navbar-nav flex-row" id="startpage-header">
+  <a class="navbar-brand p-0 has-logo d-none d-sm-flex ml-2 mr-3 align-self-center " href="https://www.univie.ac.at/" target="_blank">
+    <span class="logo"><img style="display: inline-block; min-width: 20px !important; min-height: 20px !important; repeat scroll 0% 0% !important;" src="https://www.univie.ac.at/fileadmin/templates/GLOBAL/IMG/uni_logo_220.jpg"></span>
+  </a>
+  <a class="align-self-center" href="https://moodle.univie.ac.at/" target="_self"><span style="font-size: x-large;">Moodle
+      </span></a>
+</div>
+
+<!-- <div style="text-align: center; background-color: #dd4814; width: 100%; color: white; padding-bottom: 1em;"><span><br><span class="" style="color: rgb(255, 255, 255);"><b>MOODLE-WARTUNGSFENSTER:&nbsp;&nbsp;<br></b></span></span><span style="font-size: 0.875rem;"><a href="https://zid.univie.ac.at/wartungsarbeiten/artikel/news/wartungsarbeiten-moodle-2/?cHash=d6b588e0eb3881f4efbcd650c099cc29" target="_blank" style=""><b><span style=""><span class="" style="color: rgb(255, 255, 255);">Montag, 17.02.2020 - 7:00 bis 18:00 <u style="">(mehr Informationen)</u></span></span>
+  </b>
+  </a>
+  </span>
+</div>-->
+    </div>
+<div id="landingpage_carousel" class="carousel slide ">
+
+    <div class="carousel-inner">
+                <div class="carousel-item active">
+
+                    <img class="d-block w-100 " src="https://moodle.univie.ac.at/pluginfile.php/1/theme_university_boost/carousel_1/0/moodle-banner_2020w_grey2.jpg" alt="First slide">
+
+                    <div class="carousel-caption d-block text-left carousel-caption-top" >
+                        
+                        
+                    </div>
+                </div>
+    </div>
+</div>
+
+<div class="mt-3 mb-0 my-lg-4 px-0-tmp px-lg-3-tmp d-flex flex-column flex-lg-row justify-content-around">
+        <div class="card col bg-light rounded py-3 mb-3 mb-lg-0 px-3  loginpage-box">
+            <h2><strong><div style="padding-bottom: 2px; border-bottom: solid 1px #bdbdbd; color: #0063a6"><i class="fa fa-home"></i> u:account-Anmeldung</font></strong></h2>
+                <div class="py-2 px-2 py-lg-3 px-lg-3 text-justify">
+                        <p><div class="row justify-content-md-center">
+    <div class="col-md-5">
+        <form class="mt-1" action="https://moodle.univie.ac.at/login/index.php" method="post" id="login">
+            <input id="anchor" type="hidden" name="anchor" value="">
+            <script>document.getElementById('anchor').value = location.hash;</script>
+            <input type="hidden" name="logintoken" value="IiZ9JfAiXGJsSy3m3umZN4tVvc6T2v3I">
+            <div class="form-group">
+                <label for="username" class="sr-only">
+                        UserID
+                </label>
+                <input type="text" name="username" id="username"
+                       class="form-control"
+                       value=""
+                       placeholder="UserID">
+            </div>
+            <div class="form-group">
+                <label for="password" class="sr-only">Passwort</label>
+                <input type="password" name="password" id="password" value=""
+                       class="form-control"
+                       placeholder="Passwort">
+            </div>
+                <div class="rememberpass mt-3">
+                    <input type="checkbox" name="rememberusername" id="rememberusername" value="1"  />
+                    <label for="rememberusername">UserID merken</label>
+                </div>
+
+            <button type="submit" class="btn btn-primary btn-block mt-3" id="loginbtn">Anmelden</button>
+        </form>
+    </div>
+
+    <div class="col-md-5">
+        <div class="forgetpass mt-1">
+            <p><a href="https://moodle.univie.ac.at/login/forgot_password.php">[Passwort vergessen?]</a></p>
+        </div>
+
+        <div class="mt-3">
+            Cookies müssen aktiviert sein!
+            
+        </div>
+
+    </div>
+</div></p><p></p><hr><div><span></span><p></p></div><strong style="font-size:.875rem;"><span style="color:rgb(0,102,153);">ACHTUNG:</span><span style="color:rgb(0,102,153);"> </span></strong><span style="font-size:.875rem;color:rgb(102,102,102);">aktuelle </span><span style="font-size:.875rem;"><span><span style="color:rgb(0,102,153);"><span><strong>Upload-Grenze 250 MB <br></strong></span><span style="color:rgb(102,102,102);"><span>Als LEHRENDE*R<em> </em>verwenden Sie </span></span></span></span><span style="color:rgb(0,102,153);"><span style="color:rgb(102,102,102);"><span>f</span>ür <strong>größere Dateien</strong> bitte die</span> </span><a style="font-weight:bold;" href="https://zid.univie.ac.at/it-security/tipps-fuer-nutzerinnen/cloud-speicher/" target="_blank" rel="noreferrer noopener"><span style="color:rgb(0,102,153);">u:cloud<span style="color:rgb(102,102,102);"> </span></span></a><span><span style="color:rgb(102,102,102);">und verlinken diese anschließend in Moodle!</span><span style="color:rgb(102,102,102);"> </span><strong><span style="color:rgb(0,102,153);"><a href="https://wiki.univie.ac.at/pages/viewpage.action?pageId=101484001" target="_blank" rel="noreferrer noopener">(Anleitung)</a><br></span></strong><strong>Vidoes </strong>können direkt in Moodle ohne Upload-Grenze über <strong><a href="https://wiki.univie.ac.at/pages/viewpage.action?pageId=101484696" target="_blank" rel="noreferrer noopener">Kaltura </a></strong>eingebunden werden.<br></span></span><hr><span style="font-size:.875rem;"><span><br></span></span><p><span style="font-size:.875rem;"><strong><span style="color:rgb(0,102,153);">GENERELLES MOODLE-WARTUNGSFENSTER</span><br></strong></span></p><ul><li><span style="font-size:.875rem;"><strong></strong></span><span style="font-size:.875rem;">Findet&nbsp;</span><strong style="font-size:.875rem;">jeden Montag&nbsp;</strong><span style="font-size:.875rem;">in der Zeit von</span><strong style="font-size:.875rem;">&nbsp;7:00 bis 7:30 Uhr&nbsp;</strong><span style="font-size:.875rem;">statt.</span></li><li><span style="font-size:.875rem;">In diesem Zeitraum kann es zu&nbsp;</span><strong style="font-size:.875rem;">kurzen Unterbrechungen</strong><span style="font-size:.875rem;">&nbsp;bei der Nutzung der Plattform kommen.</span></li></ul>
+                </div>
+        </div>
+        <div class="card col bg-light rounded py-3 mb-3 mb-lg-0 px-3 ml-lg-4 loginpage-box">
+            <h2><strong><div style="padding-bottom: 2px; border-bottom: solid 1px #bdbdbd; color: #0063a6"><i class="fa fa-question-circle"></i> Hilfestellung </div></strong></h2>
+                <div class="py-2 px-2 py-lg-3 px-lg-3 text-justify">
+                        <strong>LEHRENDE</strong><strong></strong><strong></strong><strong><br></strong>
+
+<ul>
+  <li><a href="https://servicedesk.univie.ac.at/plugins/servlet/desk/portal/7" target="_blank" rel="noreferrer noopener"><strong>Technischer SUPPORT</strong><em> </em>via Servicedesk (ZID)</a></li><li><a href="https://ctl.univie.ac.at/services-zur-qualitaet-von-studien/digitale-lehre/kontakt/" target="_blank" rel="noreferrer noopener"><strong>Didaktischer SUPPORT </strong>(CTL)</a><br></li>
+  </ul><ul><li><strong><a href="https://ctl.univie.ac.at/" target="_blank" rel="noreferrer noopener"><span style="color:rgb(255,153,0);">Lehre im Wintersemester 20/21</span></a></strong></li><li>
+  
+  <strong><span style="color:rgb(255,153,0);"><a href="https://zid.univie.ac.at/fileadmin/user_upload/d_zid/open/studium-lehre-forschung-it-kurse/e-learning/technische_einfuehrung_moodle.pdf" target="_blank" rel="noreferrer noopener"><span style="color:rgb(0,102,153);">EINFÜHRUNG in die Arbeit mit Moodle</span></a></span></strong> <br></li><li><span><span style="color:rgb(255,153,0);"><span style="color:rgb(255,153,0);"><a style="font-weight:bold;" href="https://moodle.univie.ac.at/course/view.php?id=140531" target="_blank" rel="noreferrer noopener"><span style="color:rgb(0,102,153);">Kurs: Moodle Newsroom</span></a> </span></span></span><span><span><span><span><span><a href="https://wiki.univie.ac.at/display/Moodle/Moodle+-+Lehrende" target="_blank" rel="noreferrer noopener"><strong></strong></a></span></span></span></span></span></li><li><span><span><span><span><span><a href="https://wiki.univie.ac.at/display/Moodle/Moodle+-+Lehrende" target="_blank" rel="noreferrer noopener"><strong>WIKI: Technische Anleitungen zu Moodle</strong></a></span></span> <br></span></span></span></li><li><span><span><span><span><span><strong><a href="https://intra.univie.ac.at/coronavirus/themen-lehre/" target="_blank" rel="noreferrer noopener">INTRANET: Lehre WS20/21</a></strong></span></span></span></span></span></li><li><span><span><span><span><span></span></span>
+    </span>
+    </span>
+    </span>
+  
+  <a href="https://zid.univie.ac.at/fileadmin/user_upload/d_zid/open/studium-lehre-forschung-it-kurse/e-learning/moodle_kurs_anlegen.pdf" target="_blank" rel="noreferrer noopener">Wie lege ich einen Moodle-Kurs für meine Veranstaltung an?</a></li><li>
+  
+  <em><a href="https://zid.univie.ac.at/fileadmin/user_upload/d_zid/open/studium-lehre-forschung-it-kurse/e-learning/creating_moodle_course.pdf" target="_blank" rel="noreferrer noopener">How to create a course for your lecture?</a></em>
+  
+
+</li></ul><hr><strong>STUDIERENDE<br></strong>
+<ul>
+  <li><a href="https://studieren.univie.ac.at/lernen-pruefen/" target="_blank" rel="noreferrer noopener"><span style="color:rgb(255,153,0);"><strong><span style="color:rgb(0,136,0);">vor-Ort/digital/hybrid studieren&nbsp;</span></strong></span></a>
+  </li>
+  <li><span style="color:rgb(255,153,0);"><span style="color:rgb(0,136,0);"><a href="https://wiki.univie.ac.at/display/Moodle/Moodle+-+Studierende" target="_blank" rel="noreferrer noopener"><span><span><span><span><span><strong>WIKI: Technische Anleitungen zu Moodle</strong></span></span>
+    </span>
+    </span>
+    </span>
+    </a>
+    <br>
+    </span>
+    </span>
+  </li>
+  <li>Bitte überprüfen Sie im<span style="color:rgb(0,102,153);">&nbsp;</span><strong><a href="https://ufind.univie.ac.at/" target="_blank" rel="noreferrer noopener"><span style="color:rgb(0,102,153);">U:FIND</span></a><span style="color:rgb(0,102,153);">&nbsp;</span></strong>ob
+    ihre Veranstaltung überhaupt durch einen <a href="https://zid.univie.ac.at/fileadmin/user_upload/d_zid/open/studium-lehre-forschung-it-kurse/e-learning/fuer_moodle_kurs_anmelden.pdf" target="_blank" rel="noreferrer noopener">Moodle-Kurs</a> unterstützt
+    wird
+  </li>
+  <li><a href="https://zid.univie.ac.at/fileadmin/user_upload/d_zid/open/studium-lehre-forschung-it-kurse/e-learning/fuer_moodle_kurs_anmelden.pdf" target="_blank" rel="noreferrer noopener">Wie registriere ich mich für einen Moodle-Kurs?</a>
+  </li>
+  <li><a href="https://zid.univie.ac.at/fileadmin/user_upload/d_zid/open/studium-lehre-forschung-it-kurse/e-learning/registering_for_moodle_course.pdf" target="_blank" rel="noreferrer noopener"><em>How to register for a course?</em></a>
+    <hr>
+  </li>
+</ul>
+<p></p><span></span>
+<div style="text-align:left;"><span><span><a href="https://moodleschulung.univie.ac.at/" target="_blank" rel="noreferrer noopener"><strong>MOODLE-SCHULUNG:</strong>&nbsp;erstellen Sie sich einen&nbsp;Testkurs&nbsp;zum Ausprobieren von Funktionalitäten in Moodle
+</a>
+<a href="https://wiki.univie.ac.at/display/homelearning/Vergleich%3A+Collaborate+-+BBB+-+Jitsi+-+MS+Teams" target="_blank" rel="noreferrer noopener">&nbsp;
+    </a>
+</span>
+  </span>
+</div>
+<br>
+                </div>
+        </div>
+        <div class="card col bg-light rounded py-3 mb-3 mb-lg-0 px-3 ml-lg-4 loginpage-box">
+            <h2><strong><div style="padding-bottom: 2px; border-bottom: solid 1px #bdbdbd; color: #0063a6"><i class="fa fa-newspaper-o"></i> Aktuelle Meldungen </div></strong></h2>
+                <div class="py-2 px-2 py-lg-3 px-lg-3 text-justify">
+                        <strong><a href="https://www.univie.ac.at/ueber-uns/weitere-informationen/coronavirus/" target="_blank" rel="noreferrer noopener">Unibetrieb ab 3. November</a></strong><p></p><hr><div style="text-align:left;"><a href="https://ctl.univie.ac.at/lehre-im-wintersemester/umstieg-von-hybrider-zu-digitaler-lehre/" target="_blank" rel="noreferrer noopener"><strong><span style="font-size:14px;">UMSTIEG von hybrider zu digitaler Lehre<span style="color:rgb(255,153,0);"> für Lehrende</span></span></strong></a><br><a href="https://ctl.univie.ac.at/lehre-im-wintersemester/umstieg-von-hybrider-zu-digitaler-lehre/" target="_blank" rel="noreferrer noopener"><strong></strong></a></div><div style="text-align:left;"><strong style="font-size:.875rem;"><span style="color:rgb(255,153,0);">Neuerungen<span style="color:rgb(255,153,0);"> </span></span></strong><strong style="font-size:.875rem;"><span style="color:rgb(255,153,0);">- Videokonferenz-Tools:</span></strong><strong style="font-size:.875rem;"><span style="color:rgb(255,153,0);"> </span></strong><a href="https://wiki.univie.ac.at/display/Moodle/Neu+in+Moodle+-+Lehrende#NeuinMoodleLehrende-BigBlueButton(BBB)" target="_blank" style="font-size:.875rem;" rel="noreferrer noopener">BigBlueButton</a><span style="font-size:.875rem;color:rgb(51,51,51);">,</span><span style="font-size:.875rem;"> 
+  </span><a href="https://wiki.univie.ac.at/display/Moodle/Neu+in+Moodle+-+Lehrende#NeuinMoodleLehrende-Collaborate" target="_blank" style="font-size:.875rem;" rel="noreferrer noopener">Collaborate</a><span style="font-size:.875rem;">&nbsp;</span><br><span style="font-size:.875rem;"></span></div><div style="text-align:left;"><strong style="font-size:.875rem;"><span style="color:rgb(255,153,0);">Collaborate 250+: </span></strong><span style="font-size:.875rem;color:rgb(255,153,0);"><a href="https://wiki.univie.ac.at/pages/viewpage.action?pageId=115120718" target="_blank" rel="noreferrer noopener">erstellen Sie<strong> online Sessions bis zu 500 Personen</strong></a></span><br><span style="font-size:.875rem;color:rgb(255,153,0);"></span></div><div style="text-align:left;"><strong style="font-size:.875rem;"><span style="color:rgb(255,153,0);">Kaltura: </span></strong><span style="font-size:.875rem;">
+  </span><span style="font-size:.875rem;color:rgb(255,153,0);"><a href="https://wiki.univie.ac.at/pages/viewpage.action?pageId=101484696"><strong>Videos in Moodle</strong> uploaden / erstellen / einbinden</a></span></div><p></p><p style="text-align:left;">
+</p>
+<hr><p><strong><span style="color:rgb(255,153,0);">Information für die Planung des WS 2020/21&nbsp;</span></strong><a href="https://ctl.univie.ac.at/home-learning/lv-modelle/" target="_blank" rel="noreferrer noopener"><strong><span><span xml:lang="de" lang="de"></span></span></strong></a><br><a href="https://ctl.univie.ac.at/home-learning/lv-modelle/" target="_blank" rel="noreferrer noopener"><strong><span><span xml:lang="de" lang="de"></span></span></strong></a><a href="https://ctl.univie.ac.at/home-learning/lv-modelle/" target="_blank" rel="noreferrer noopener"><strong><span><span xml:lang="de" lang="de">- Anregungen für LV-Modelle</span></span></strong></a>
+<a href="https://ctl.univie.ac.at/lehre-im-wintersemester/webinare/" target="_blank" rel="noreferrer noopener"><span><span xml:lang="de" lang="de"><span><span xml:lang="de" lang="de"><span><span xml:lang="de" lang="de"><strong></strong></span></span></span></span></span></span></a><br><a href="https://ctl.univie.ac.at/lehre-im-wintersemester/webinare/" target="_blank" rel="noreferrer noopener"><span><span xml:lang="de" lang="de"><span><span xml:lang="de" lang="de"><span><span xml:lang="de" lang="de"><strong></strong></span></span></span></span></span></span></a><a href="https://ctl.univie.ac.at/lehre-im-wintersemester/webinare/" target="_blank" rel="noreferrer noopener"><span><span xml:lang="de" lang="de"><span><span xml:lang="de" lang="de"><span><span xml:lang="de" lang="de"><strong>- Termine: Online Sprechstunden</strong></span></span></span></span></span></span></a><span><span xml:lang="de" lang="de"><span><span xml:lang="de" lang="de"><span><span xml:lang="de" lang="de"></span></span></span></span></span></span><br><span><span xml:lang="de" lang="de"><span><span xml:lang="de" lang="de"><span><span xml:lang="de" lang="de"></span></span></span></span></span></span><span><span xml:lang="de" lang="de"><span><span xml:lang="de" lang="de"><span><span xml:lang="de" lang="de">&nbsp;<br></span></span></span></span></span></span><strong style="font-size:.875rem;"><a href="https://wiki.univie.ac.at/pages/viewpage.action?pageId=110728050" target="_blank" rel="noreferrer noopener">LEHRBETRIEB aus DEM HÖRSAAL <span style="color:rgb(255,153,0);">für Lehrende</span></a></strong><br><strong style="font-size:.875rem;"></strong><strong style="font-size:.875rem;"><span><span><a href="https://wiki.univie.ac.at/pages/viewpage.action?pageId=105517385">DIGITALES PRÜFEN <span style="color:rgb(255,153,0);"> für Lehrende</span></a></span></span></strong></p><div style="text-align:left;"><strong><a href="https://www.univie.ac.at/ueber-uns/weitere-informationen/Coronavirus/" target="_blank" rel="noreferrer noopener">Aktuelle Informationen zum Coronavirus (Uni Wien)</a></strong><br><span>
+  <a href="https://ctl.univie.ac.at/infoszuhome-learning/">
+    </a></span></div>
+
+
+
+<p style="font-weight:bold;">
+  <a href="https://ctl.univie.ac.at/infoszuhome-learning/"></a>
+</p>
+<a href="https://ctl.univie.ac.at/infoszuhome-learning/">
+</a>
+<h1 style="font-weight:bold;"><a href="https://ctl.univie.ac.at/infoszuhome-learning/"></a></h1>
+<a href="https://ctl.univie.ac.at/infoszuhome-learning/">
+</a>
+<p style="font-weight:bold;">
+  <a href="https://ctl.univie.ac.at/infoszuhome-learning/"></a>
+</p>
+<a href="https://ctl.univie.ac.at/infoszuhome-learning/">
+</a>
+                </div>
+        </div>
+</div>
+
+    <div class="">
+        <p style="text-align: left;" dir="ltr"><br></p>
+    </div></div>
+                    
+                </section>
+            </div>
+        </div>
+    </div>
+    <footer id="page-footer" class="p-y-1 bg-inverse">
+        <div class="container">
+            <a href="https://zid.univie.ac.at/" target="_blank">Universität Wien - Zentraler Informatikdienst</a> - <a href="https://dsba.univie.ac.at/datenschutzerklaerung" target="_blank">Datenschutzerklärung </a>- <a href="mailto:helpdesk.zid@univie.ac.at?subject=Moodle Frage&amp;body=Name:%20%0Du:account:%20%0DKurs:%20%0DFrage:%20">helpdesk.zid@univie.ac.at</a><br><a href="http://www.academic-moodle-cooperation.org/">AMC - Academic Moodle Cooperation</a>
+            <hr />
+            <div id="course-footer"></div>
+
+            
+            
+<!-- Matomo -->
+<script type="text/javascript">
+  var _paq = window._paq || [];
+  /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+  _paq.push(['trackPageView']);
+  _paq.push(['enableLinkTracking']);
+  (function() {
+    var u="//moodlestats.univie.ac.at/";
+    _paq.push(['setTrackerUrl', u+'matomo.php']);
+    _paq.push(['setSiteId', '3']);
+    var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+    g.type='text/javascript'; g.async=true; g.defer=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
+  })();
+</script>
+<!-- End Matomo Code -->
+<script>
+//<![CDATA[
+var require = {
+    baseUrl : 'https://moodle.univie.ac.at/lib/requirejs.php/1604196672/',
+    // We only support AMD modules with an explicit define() statement.
+    enforceDefine: true,
+    skipDataMain: true,
+    waitSeconds : 0,
+
+    paths: {
+        jquery: 'https://moodle.univie.ac.at/lib/javascript.php/1604196672/lib/jquery/jquery-3.4.1.min',
+        jqueryui: 'https://moodle.univie.ac.at/lib/javascript.php/1604196672/lib/jquery/ui-1.12.1/jquery-ui.min',
+        jqueryprivate: 'https://moodle.univie.ac.at/lib/javascript.php/1604196672/lib/requirejs/jquery-private'
+    },
+
+    // Custom jquery config map.
+    map: {
+      // '*' means all modules will get 'jqueryprivate'
+      // for their 'jquery' dependency.
+      '*': { jquery: 'jqueryprivate' },
+      // Stub module for 'process'. This is a workaround for a bug in MathJax (see MDL-60458).
+      '*': { process: 'core/first' },
+
+      // 'jquery-private' wants the real jQuery module
+      // though. If this line was not here, there would
+      // be an unresolvable cyclic dependency.
+      jqueryprivate: { jquery: 'jquery' }
+    }
+};
+
+//]]>
+</script>
+<script src="https://moodle.univie.ac.at/lib/javascript.php/1604196672/lib/requirejs/require.min.js"></script>
+<script>
+//<![CDATA[
+M.util.js_pending("core/first");require(['core/first'], function() {
+require(['core/prefetch']);
+;
+require(["media_videojs/loader"], function(loader) {
+    loader.setUp(function(videojs) {
+        videojs.options.flash.swf = "https://moodle.univie.ac.at/media/player/videojs/videojs/video-js.swf";
+videojs.addLanguage('de', {
+  "Play": "Wiedergabe",
+  "Pause": "Pause",
+  "Replay": "Erneut abspielen",
+  "Current Time": "Aktueller Zeitpunkt",
+  "Duration": "Dauer",
+  "Remaining Time": "Verbleibende Zeit",
+  "Stream Type": "Streamtyp",
+  "LIVE": "LIVE",
+  "Loaded": "Geladen",
+  "Progress": "Status",
+  "Fullscreen": "Vollbild",
+  "Non-Fullscreen": "Kein Vollbild",
+  "Mute": "Ton aus",
+  "Unmute": "Ton ein",
+  "Playback Rate": "Wiedergabegeschwindigkeit",
+  "Subtitles": "Untertitel",
+  "subtitles off": "Untertitel aus",
+  "Captions": "Untertitel",
+  "captions off": "Untertitel aus",
+  "Chapters": "Kapitel",
+  "You aborted the media playback": "Sie haben die Videowiedergabe abgebrochen.",
+  "A network error caused the media download to fail part-way.": "Der Videodownload ist aufgrund eines Netzwerkfehlers fehlgeschlagen.",
+  "The media could not be loaded, either because the server or network failed or because the format is not supported.": "Das Video konnte nicht geladen werden, da entweder ein Server- oder Netzwerkfehler auftrat oder das Format nicht unterstützt wird.",
+  "The media playback was aborted due to a corruption problem or because the media used features your browser did not support.": "Die Videowiedergabe wurde entweder wegen eines Problems mit einem beschädigten Video oder wegen verwendeten Funktionen, die vom Browser nicht unterstützt werden, abgebrochen.",
+  "No compatible source was found for this media.": "Für dieses Video wurde keine kompatible Quelle gefunden.",
+  "Play Video": "Video abspielen",
+  "Close": "Schließen",
+  "Modal Window": "Modales Fenster",
+  "This is a modal window": "Dies ist ein modales Fenster",
+  "This modal can be closed by pressing the Escape key or activating the close button.": "Durch Drücken der Esc-Taste bzw. Betätigung der Schaltfläche \"Schließen\" wird dieses modale Fenster geschlossen.",
+  ", opens captions settings dialog": ", öffnet Einstellungen für Untertitel",
+  ", opens subtitles settings dialog": ", öffnet Einstellungen für Untertitel",
+  ", selected": ", ausgewählt",
+  "captions settings": "Untertiteleinstellungen",
+  "subtitles settings": "Untertiteleinstellungen",
+  "descriptions settings": "Einstellungen für Beschreibungen",
+  "Close Modal Dialog": "Modales Fenster schließen",
+  "Descriptions": "Beschreibungen",
+  "descriptions off": "Beschreibungen aus",
+  "The media is encrypted and we do not have the keys to decrypt it.": "Die Entschlüsselungsschlüssel für den verschlüsselten Medieninhalt sind nicht verfügbar.",
+  ", opens descriptions settings dialog": ", öffnet Einstellungen für Beschreibungen",
+  "Audio Track": "Tonspur",
+  "Text": "Schrift",
+  "White": "Weiß",
+  "Black": "Schwarz",
+  "Red": "Rot",
+  "Green": "Grün",
+  "Blue": "Blau",
+  "Yellow": "Gelb",
+  "Magenta": "Magenta",
+  "Cyan": "Türkis",
+  "Background": "Hintergrund",
+  "Window": "Fenster",
+  "Transparent": "Durchsichtig",
+  "Semi-Transparent": "Halbdurchsichtig",
+  "Opaque": "Undurchsichtig",
+  "Font Size": "Schriftgröße",
+  "Text Edge Style": "Textkantenstil",
+  "None": "Kein",
+  "Raised": "Erhoben",
+  "Depressed": "Gedrückt",
+  "Uniform": "Uniform",
+  "Dropshadow": "Schlagschatten",
+  "Font Family": "Schriftfamilie",
+  "Proportional Sans-Serif": "Proportionale Sans-Serif",
+  "Monospace Sans-Serif": "Monospace Sans-Serif",
+  "Proportional Serif": "Proportionale Serif",
+  "Monospace Serif": "Monospace Serif",
+  "Casual": "Zwanglos",
+  "Script": "Schreibschrift",
+  "Small Caps": "Small-Caps",
+  "Reset": "Zurücksetzen",
+  "restore all settings to the default values": "Alle Einstellungen auf die Standardwerte zurücksetzen",
+  "Done": "Fertig",
+  "Caption Settings Dialog": "Einstellungsdialog für Untertitel",
+  "Beginning of dialog window. Escape will cancel and close the window.": "Anfang des Dialogfensters. Esc bricht ab und schließt das Fenster.",
+  "End of dialog window.": "Ende des Dialogfensters.",
+  "Audio Player": "Audio-Player",
+  "Video Player": "Video-Player",
+  "Progress Bar": "Forschrittsbalken",
+  "progress bar timing: currentTime={1} duration={2}": "{1} von {2}",
+  "Volume Level": "Lautstärke",
+  "{1} is loading.": "{1} wird geladen.",
+  "Seek to live, currently behind live": "Zur Live-Übertragung wechseln. Aktuell wird es nicht live abgespielt.",
+  "Seek to live, currently playing live": "Zur Live-Übertragung wechseln. Es wird aktuell live abgespielt."
+});
+
+    });
+});;
+
+;
+
+;
+
+require(['jquery', 'core/custom_interaction_events'], function($, CustomEvents) {
+    CustomEvents.define('#single_select5fa430e5e42b03', [CustomEvents.events.accessibleChange]);
+    $('#single_select5fa430e5e42b03').on(CustomEvents.events.accessibleChange, function() {
+        var ignore = $(this).find(':selected').attr('data-ignore');
+        if (typeof ignore === typeof undefined) {
+            $('#single_select_f5fa430e5e42b02').submit();
+        }
+    });
+});
+;
+
+require(['theme_boost/loader']);
+;
+
+    require(['jquery', 'theme_boost/carousel'], function($) {
+        $(document).ready(function() {
+            $('#landingpage_carousel').carousel( {
+                interval: 10000,
+                pause: false
+            });
+        });
+    });
+;
+M.util.js_pending('core/notification'); require(['core/notification'], function(amd) {amd.init(1, [], false); M.util.js_complete('core/notification');});;
+M.util.js_pending('core/log'); require(['core/log'], function(amd) {amd.setConfig({"level":"warn"}); M.util.js_complete('core/log');});;
+M.util.js_pending('core/page_global'); require(['core/page_global'], function(amd) {amd.init(); M.util.js_complete('core/page_global');});M.util.js_complete("core/first");
+});
+//]]>
+</script>
+<script>
+//<![CDATA[
+M.str = {"moodle":{"lastmodified":"Zuletzt ge\u00e4ndert","name":"Name","error":"Fehler","info":"Infos","yes":"Ja","no":"Nein","ok":"OK","cancel":"Abbrechen","confirm":"Best\u00e4tigen","areyousure":"Sind Sie sicher?","closebuttontitle":"Schlie\u00dfen","unknownerror":"Unbekannter Fehler","file":"Datei","url":"URL"},"repository":{"type":"Typ","size":"Gr\u00f6\u00dfe","invalidjson":"Ung\u00fcltiger JSON-Text","nofilesattached":"Keine Datei","filepicker":"Dateiauswahl","logout":"Abmelden","nofilesavailable":"Keine Dateien vorhanden","norepositoriesavailable":"Sie k\u00f6nnen hier zur Zeit keine Dateien hochladen.","fileexistsdialogheader":"Datei bereits vorhanden","fileexistsdialog_editor":"Eine Datei mit diesem Namen wurde bereits an den Text angeh\u00e4ngt, den Sie gerade bearbeiten","fileexistsdialog_filemanager":"Eine Datei mit diesem Namen wurde bereits an den Text angeh\u00e4ngt","renameto":"Nach '{$a}' umbenennen","referencesexist":"{$a} Aliase\/Verkn\u00fcpfungen zu dieser Datei","select":"W\u00e4hlen Sie"},"admin":{"confirmdeletecomments":"M\u00f6chten Sie die Kommentare wirklich l\u00f6schen?","confirmation":"Best\u00e4tigung"},"debug":{"debuginfo":"Debug-Info","line":"Zeile","stacktrace":"Stack trace"},"langconfig":{"labelsep":":\u00a0"}};
+//]]>
+</script>
+<script>
+//<![CDATA[
+(function() {Y.use("moodle-filter_mathjaxloader-loader",function() {M.filter_mathjaxloader.configure({"mathjaxconfig":"MathJax.Hub.Config({\r\n    config: [\"MMLorHTML.js\", \"Safe.js\"],\r\n    jax: [\"input\/TeX\",\"input\/MathML\",\"output\/HTML-CSS\",\"output\/NativeMML\"],\r\n    \r\n    extensions: [\"tex2jax.js\",\"mml2jax.js\",\"MathMenu.js\",\"MathZoom.js\"],\r\n    \r\n   tex2jax: {\r\n      inlineMath: [ ['$','$'], [\"\\\\(\",\"\\\\)\"] ],\r\n      displayMath: [ ['$$','$$'], [\"\\\\[\",\"\\\\]\"] ],\r\n      processEscapes: true\r\n    },\r\n\r\n    TeX: { extensions: [\"mhchem.js\",\"color.js\",\"AMSmath.js\",\"AMSsymbols.js\",\"noErrors.js\",\"noUndefined.js\"] },\r\n\r\n    menuSettings: { zoom: \"Double-Click\", mpContext: true, mpMouse: true },\r\n    errorSettings: { message: [\"!\"] },\r\n    skipStartupTypeset: true,\r\n    messageStyle: \"none\"\r\n});\r\n\r\n","lang":"de"});
+});
+Y.use("moodle-filter_glossary-autolinker",function() {M.filter_glossary.init_filter_autolinking({"courseid":0});
+});
+M.util.help_popups.setup(Y);
+ M.util.js_pending('random5fa430e5e42b06'); Y.on('domready', function() { M.util.js_complete("init");  M.util.js_complete('random5fa430e5e42b06'); });
+})();
+//]]>
+</script>
+
+        </div>
+    </footer>
+</div>
+
+</body>
+</html>
