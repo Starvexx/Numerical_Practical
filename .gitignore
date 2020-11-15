@@ -7,6 +7,8 @@ Presentations/
 # 
 Exercises/Assignment_*/Task_*/*.svg
 Exercises/Assignemnt_*/Task_*/*.pdf
+Exercises/Assignemnt_*/Task_*/*.log
+Exercises/Assignemnt_*/Task_*/*.txt
 
 # Exclude metafiles in Report folder.
 #
