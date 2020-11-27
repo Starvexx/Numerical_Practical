@@ -262,9 +262,11 @@ iteration the initial condition is stored to the result array. In the each other
 next approximation is done according to Equation \ref{eqn:forward_euler}. The only difference
 is that slightly different indexing is used.
 \begin{lstlisting}[firstnumber=187, name=ode_solvers]
-result[i] = result[i-1] + t_step * derivative(t, result[i-1])
+result[i] = result[i-1] + t_step * derivative(t - t_step, result[i-1])
 \end{lstlisting}
-Here \(i\) and \(i-1\) correspond to \(n+1\) and \(n\) respectively.
+Here \(i\) and \(i-1\) correspond to \(n+1\) and \(n\) respectively. Also note the subtraction
+of \verb+t_step+ to use the correct time since it has been advanced by \verb+t_step+ in the
+previous iteration.
 
 \subsubsection*{Classical Runge-Kutta}%
 \label{ssub:classical_runge_kutta}
@@ -304,8 +306,8 @@ These two functions are implemented as \verb+lambda+ functions as can be seen in
 code listing.
 \begin{lstlisting}[firstnumber=329, name=ode_solvers]
 G = lambda y_next : y_next - result[i-1]\
-                    - t_step * f(t + t_step,y_next)
-G_prime = lambda y_next : 1 - t_step * f(t + t_step, y_next)
+                    - t_step * f(t, y_next)
+G_prime = lambda y_next : 1 - t_step * f(t, y_next)
 \end{lstlisting}
 The next two steps are to estimate \(y_{n+1}\) with the newton iterator and then compute the
 next function value.
@@ -316,9 +318,11 @@ y_next = newton(init=result[i],
                 tolerance=1e-5)
 \end{lstlisting}
 \begin{lstlisting}[firstnumber=346, name=ode_solvers]
-    result[i] = result[i-1] + t_step * f(t + t_step, y_next)
+    result[i] = result[i-1] + t_step * f(t, y_next)
 \end{lstlisting}
-As mentioned in \ref{sub:forward_euler}, a slightly different indexing system is used.
+As mentioned in \ref{sub:forward_euler}, a slightly different indexing system is used. Also
+note the time correction, \(t_{n+1}=t\), where adding \(\Delta t\) is omitted since the time
+update was done in the previous iteration. 
 
 \subsubsection*{Crank Nicolson}%
 \label{ssub:crank_nicolson}
@@ -327,9 +331,19 @@ The \verb+crank_nicolson()+ function takes the same arguments that are listed in
 as the mean value of Forward and Backward Euler its implementation is very similar to Forward
 Euler. The only difference lies in the computation of \(y_{n+1}\) as is shown beneath:
 \begin{lstlisting}[firstnumber=418, name=ode_solvers]
-result[i] = result[i-1] + 1/2 * t_step * (f(t, result[i])
-                + f(t + t_step, y_next))
+result[i] = result[i-1] + 1/2 * t_step * (f(t - t_step, result[i])
+                + f(t, y_next))
 \end{lstlisting}
+
+\begin{figure*}[htbp]
+    \centering
+    \captionsetup{width = 0.9 \textwidth}
+    \includegraphics[width=17cm]{../Task_01/ODE_solvers.pdf}
+    \caption{The approximations for the solution of the differential equation for each of the
+    individual methods. It is nicely visible how an increase in integration steps leads to
+    higher accuracy in the solutions.}
+    \label{fig:ODE_solvers}
+\end{figure*}
 
 \subsection{Task 2}%
 \label{sub:task_2}
@@ -370,22 +384,12 @@ said step is redetermined in each iteration, a python list ist used to store the
 fly and are only converted to a \verb+numpy.array+ when returned. As mentioned in Subsection
 \ref{sub:classical_runge_kutta} the Runge-Kutta-Fehlberg method is defined by its Butcher
 Tableau, see Table \ref{tab:rkf_butcher_tableau}. The Butcher Tableau is hardcoded in this
-function as a multidimensional array. First three arrays \verb+A+, \verb+B+ and \verb+C+
+function as a multidimensional array. First three arrays, \verb+A+,~\verb+B+~and~\verb+C+,
 corresponding to the three sections in any Butcher Tableau, see Table
-\ref{tab:general_butcher_tableau}. These are then stacked into a single array so that the whole
+\ref{tab:general_butcher_tableau}, are defined. These are then stacked into a single array so that the whole
 table can be passed to the helper functions. The computations for the function values are done
 in a while loop that checks if the current time is within the integration interval. Within this
 loop the \verb+optimization()+ function is called.
-
-\begin{figure*}[htbp]
-    \centering
-    \captionsetup{width = 0.9 \textwidth}
-    \includegraphics[width=17cm]{../Task_01/ODE_solvers.pdf}
-    \caption{The approximations for the solution of the differential equation for each of the
-    individual methods. It is nicely visible how an increase in integration steps leads to
-    higher accuracy in the solutions.}
-    \label{fig:ODE_solvers}
-\end{figure*}
 
 \subsubsection*{Optimization}%
 \label{ssub:optimization}
@@ -452,12 +456,26 @@ Thus the complete solution is as follows.
 
 As expected, the number of integration steps greatly influences the accuracy of the result. As
 can be seen in Figure \ref{fig:ODE_solvers}, all methods perform badly with less than 30 steps.
-With only two iterations, greatly over or undershoots the analytical solution, which is plotted
-as the solid line in all four cases. 
+With only two iterations, the computations greatly over or undershoots the analytical solution,
+which is plotted as the solid line in all four cases.
 
 \subsection{Task 2}%
 \label{ssub:res_task_2}
-
-
+\begin{figure}[htbp]
+    \centering
+    \captionsetup{width = 0.9 \linewidth}
+    \includegraphics[width=\linewidth]{../Task_02/runge-kutta-fehlberg.pdf}
+    \caption{The results of the RK45 method computed with different tolerance factors \(\alpha
+    = [10^{-1} \dots 10^{-6}]\). The top plot shows the results for the differential equation.
+    The middle depicts the time step length. Clearly visible are the variation in the length,
+    especially with a LTE tolerance of \(10^{-4}y_n\), which is the red line close to the
+    bottom. The bottom plot shows the number of integration steps needed for solution with
+    specific tolerance.}
+    \label{fig:res_rkf}
+\end{figure}
+Again, when taking a look at Figure \ref{fig:res_rkf}, the accuracy of
+the approximation increases with smaller tolerances. Generally speaking, we start to get pretty
+good results once the tolerance dips under \(10^{-4}y_n\). Also we can see in bottom plot, that
+the number of iterations increases rapidly with a lower tolerance.
 
 \end{document}

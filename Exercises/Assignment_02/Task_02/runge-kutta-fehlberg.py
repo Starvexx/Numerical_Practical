@@ -71,6 +71,7 @@ def get_k(function,
 
 def optimize(function,
              time,
+             t_end,
              y_n,
              delta_t,
              tolerance,
@@ -123,6 +124,8 @@ def optimize(function,
         determined.
     time : scalar
         The current time t of the time step.
+    t_end : scalar
+        The end time of the total integration interval.
     y_n : scalar
         Current function value y(t) from which the next function value
         y_(n+1)(t) is derived.
@@ -175,6 +178,13 @@ def optimize(function,
     lte_tol = tolerance * y_n
 
     ###################################################################
+    #   If the end step has been reached go ahead and return the final
+    #   results.
+    ###################################################################
+    if time == t_end:
+        return time, y_npo[0], delta_t, lte
+
+    ###################################################################
     #   Optimize the time step.
     ###################################################################
     dt_opt = 0.999 * delta_t * (np.abs(lte_tol/lte))**(1/5)
@@ -182,45 +192,73 @@ def optimize(function,
     ###################################################################
     #   Write everything to logfile.
     ###################################################################
-    with open(logfile, 'a') as log:
-        log.write(f'\nt:\t\t  {time}\n')
-        log.write(f'y_n:\t  {y_n}\n')
-        log.write(f'Δt:\t\t  {delta_t}\n')
-        log.write(f'tol:\t  {tolerance}\n')
-        log.write(f'k:\t\t  {k}\n')
-        log.write(f'y5_(n+1): {y_npo[0]}\n')
-        log.write(f'y4_(n+1): {y_npo[1]}\n')
-        log.write(f'lte:\t  {lte}\n')
-        log.write(f'lte_tol:  {lte_tol}\n')
-        log.write(f'Δt_opt:\t  {dt_opt}\n')
+    if logfile is not None:
+        with open(logfile, 'a') as log:
+            log.write(f'\nt:\t\t  {time}\n')
+            log.write(f'y_n:\t  {y_n}\n')
+            log.write(f'Δt:\t\t  {delta_t}\n')
+            log.write(f'tol:\t  {tolerance}\n')
+            log.write(f'k:\t\t  {k}\n')
+            log.write(f'y5_(n+1): {y_npo[0]}\n')
+            log.write(f'y4_(n+1): {y_npo[1]}\n')
+            log.write(f'lte:\t  {lte}\n')
+            log.write(f'lte_tol:  {lte_tol}\n')
+            log.write(f'Δt_opt:\t  {dt_opt}\n')
 
     ###################################################################
     #   Check if the optimization was successful, if the optimization
     #   criterion is not met, keep optimizing. This is done
-    #   recursively.
+    #   recursively. Also if the time step update exceeds the end time
+    #   set delta_t to t_end - time and set the time to the end time.
+    #   Then compute y_(n+1) for the end time.
     ###################################################################
-    if delta_t > dt_opt:
-        rec_depth += 1
+    if delta_t < dt_opt and (time + dt_opt) > t_end:
+        ###############################################################
+        #   Compute final result.
+        ###############################################################
+        delta_t = t_end - time
+        time = t_end
+
         return optimize(function=function,
                         time=time,
+                        t_end=t_end,
+                        y_n=y_n,
+                        delta_t=delta_t,
+                        tolerance=tolerance,
+                        logfile=logfile,
+                        butcher_tableau=butcher_tableau,
+                        rec_depth=rec_depth)
+
+    elif delta_t > dt_opt:
+        ###############################################################
+        #   Keep optimizing.
+        ###############################################################
+        rec_depth += 1
+
+        return optimize(function=function,
+                        time=time,
+                        t_end=t_end,
                         y_n=y_n,
                         delta_t=dt_opt,
                         tolerance=tolerance,
                         logfile=logfile,
                         butcher_tableau=butcher_tableau,
                         rec_depth=rec_depth)
-    else:
-        with open(logfile, 'a') as log:
-            st = '#' * 79
-            log.write(f'\n{st}\nOptimized Δt {rec_depth} times...\n{st}\n')
-        dt = dt_opt         #   Update time step length.
-        time += dt          #   Update time for the next time step.
-        y_new = y_npo[0]    #   Get fifth order y_(n+1) result.
 
-        ###################################################################
+    else:
+        ###############################################################
+        #   Return results and move on to the next time step.
+        ###############################################################
+        if logfile is not None:
+            with open(logfile, 'a') as log:
+                st = '#' * 79
+                log.write(f'\n{st}\nOptimized Δt {rec_depth} times...\n{st}\n')
+        time += dt_opt      #   Update time for the next time step.
+
+        ###############################################################
         #   Return results from optimization
-        ###################################################################
-        return time, y_new, dt, lte
+        ###############################################################
+        return time, y_npo[0], dt_opt, lte
 
 
 def rk45(function,
@@ -257,7 +295,7 @@ def rk45(function,
     --------
     result : numpy.array
         This is the results array. It holds the pairs of approximated
-        function values and the corresponding times, as well as the 
+        function values and the corresponding times, as well as the
         time step lengths and the Local Truncation Errors.
     """
     ###################################################################
@@ -287,7 +325,7 @@ def rk45(function,
     #   Compute the time steps until the end time is reached.
     ###################################################################
     i = 1
-    while result[i-1][0] <= t_end:
+    while result[i-1][0] < t_end:
         t = result[i-1][0]
         y_n = result[i-1][1]
         dt = result[i-1][2]
@@ -295,12 +333,14 @@ def rk45(function,
         ################################################################
         #   Write current time of the time step to the logfile.
         ################################################################
-        st = 79*'#'
-        with open(logfile, 'a') as log:
-            log.write(f'\n{st}\nCurrent time of time step:\t{t}\n{st}\n')
+        if logfile is not None:
+            st = 79*'#'
+            with open(logfile, 'a') as log:
+                log.write(f'\n{st}\nCurrent time of time step:\t{t}\n{st}\n')
 
         step_results = optimize(function=function,
                                 time=t,
+                                t_end=t_end,
                                 y_n=y_n,
                                 delta_t=dt,
                                 tolerance=tolerance,
@@ -322,6 +362,7 @@ def rk45(function,
 def main():
     """Main subroutine"""
 
+    log = False
     ###################################################################
     #   Set up the differential equation and the initial condition.
     ###################################################################
@@ -346,11 +387,12 @@ def main():
         ###############################################################
         #   Create log files for the different runs.
         ###############################################################
-        with open(f'tol_{tol}.log', 'w') as log:
-            st = '#' * 79
-            log.write(f'{st}\n{st}\n')
-            log.write(f'\nRK45 LOGFILE\n\nTolerance:\t{tol} * y_n\n\n')
-            log.write(f'{st}\n{st}\n')
+        if log is not False:
+            with open(f'tol_{tol}.log', 'w') as log:
+                st = '#' * 79
+                log.write(f'{st}\n{st}\n')
+                log.write(f'\nRK45 LOGFILE\n\nTolerance:\t{tol} * y_n\n\n')
+                log.write(f'{st}\n{st}\n')
 
     results = np.array([rk45(function=y_dot,
                              init_cond=y0,
@@ -358,7 +400,8 @@ def main():
                              init_t_step=0.5,
                              t_start=t_start,
                              t_end=t_end,
-                             logfile=f'tol_{tol}.log') for tol in tolerances])
+                             logfile=None) for tol in tolerances])
+                             # logfile=f'tol_{tol}.log') for tol in tolerances])
 
     ###################################################################
     #   Write results from the different runs to individual text files.
@@ -382,13 +425,14 @@ def main():
     ###################################################################
     rc('font',
        **{'family':'serif',
-          'serif':['Computer Modern Roman']})
+          'serif':['Computer Modern Roman']},
+       size = 9)
     rc('text', usetex=True)
 
     ###################################################################
     #   Create new matplotlib.pyplot figure with subplots.
     ###################################################################
-    fig = plt.figure(figsize=(6.3, 6))       #   figsize in inches
+    fig = plt.figure(figsize=(3.55659, 8))       #   figsize in inches
 
     ###################################################################
     #   Plot the data.
@@ -404,10 +448,10 @@ def main():
     for result, tol in zip(results, tolerances):
         ax1.plot(result[:, 0],
                  result[:, 1],
-                 label=f'tol: {tol}')
+                 label=str(tol))
         ax2.plot(result[:, 0],
                  result[:, 2],
-                 label=f'tol: {tol}')
+                 label=str(tol))
 
     n_steps = np.array([len(a) for a in results])
     ax3.plot(n_steps[:6], tolerances[:6])
@@ -415,14 +459,14 @@ def main():
     ###################################################################
     #   Format the subplot.
     ###################################################################
-    ax1.set_title('Passing \(\Delta t_\mathrm{opt}\) to next step')
+    ax1.set_title('RK45 approximations')
     ax1.set_xlabel('t')
     ax1.set_ylabel('y(t)')
-    ax1.legend(loc='center right', bbox_to_anchor=(1.2, 0.5))
+    ax1.legend(loc='lower center', bbox_to_anchor=(0.5, -0.48), ncol=3)
 
     ax2.set_xlabel('t')
     ax2.set_ylabel('\(\Delta\)t')
-    ax2.legend(loc='center right', bbox_to_anchor=(1.2, 0.5))
+    ax2.legend(loc='lower center', bbox_to_anchor=(0.5, -0.48), ncol=3)
 
     ax3.set_xlabel('steps')
     ax3.set_ylabel('\(\mathrm{LTE}_\mathrm{tol}\)')
@@ -430,9 +474,9 @@ def main():
 
     plt.subplots_adjust(top=0.965,
                         bottom=0.055,
-                        left=0.075,
-                        right=0.845,
-                        hspace=0.22,
+                        left=0.17,
+                        right=0.97,
+                        hspace=0.485,
                         wspace=0.2)
 
     ###################################################################

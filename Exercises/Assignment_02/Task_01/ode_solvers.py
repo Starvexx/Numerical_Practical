@@ -171,16 +171,15 @@ def forward_euler(derivative,
     #   t : The parameter t which will be updated in each iteration.
     ###################################################################
     t_step = (t_end - t_start) / n_steps
-    result = np.empty(n_steps)
+    result = np.empty(n_steps + 1)
     t = t_start
 
-    for i in range(n_steps):
+    for i in range(n_steps + 1):
         if t == t_start:
             result[i] = init_cond
         else:
-            result[i] = result[i-1] + t_step * derivative(t, result[i-1])
+            result[i] = result[i-1] + t_step * derivative(t - t_step, result[i-1])
         t += t_step
-
     return result
 
 
@@ -228,22 +227,22 @@ def classical_runge_kutta(derivative,
 
     """
     t_step = (t_end - t_start) / n_steps
-    result = np.empty(n_steps)
+    result = np.empty(n_steps + 1)
     t = t_start
 
-    for i in range(n_steps):
+    for i in range(n_steps + 1):
         if t == t_start:
             result[i] = init_cond
         else:
             ###########################################################
             #   Compute the Coefficients k_1 to k_4
             ###########################################################
-            k_1 = derivative(t, result[i-1])
-            k_2 = derivative(t + 1/2 * t_step,
+            k_1 = derivative(t - t_step, result[i-1])
+            k_2 = derivative(t - t_step + 1/2 * t_step,
                              result[i-1] + 1/2 * t_step * k_1)
-            k_3 = derivative(t + 1/2 * t_step,
+            k_3 = derivative(t - t_step + 1/2 * t_step,
                              result[i-1] + 1/2 * t_step * k_2)
-            k_4 = derivative(t + t_step,
+            k_4 = derivative(t - t_step + t_step,
                              result[i-1] + t_step * k_3)
 
             ###########################################################
@@ -309,10 +308,10 @@ def backward_euler(f,
         This are the results y(t) for the individual time steps.
     """
     t_step = (t_end - t_start) / n_steps
-    result = np.empty(n_steps)
+    result = np.empty(n_steps + 1)
     t = t_start
 
-    for i in range(n_steps):
+    for i in range(n_steps + 1):
         if t == t_start:
             result[i] = init_cond
         else:
@@ -321,15 +320,15 @@ def backward_euler(f,
             #   iterator.
             ###########################################################
             G = lambda y_next : y_next - result[i-1]\
-                                - t_step * f(t + t_step, y_next)
-            G_prime = lambda y_next : 1 - t_step * f_prime(t + t_step, y_next)
+                                - t_step * f(t, y_next)
+            G_prime = lambda y_next : 1 - t_step * f_prime(t, y_next)
 
             ###########################################################
             #   Approximate y_(n+1) using the Newton iterator. y_next
             #   will be used to determine the result for the next time
             #   step.
             ###########################################################
-            y_next = newton(init=result[i],
+            y_next = newton(init=result[i-1],
                             function=G,
                             derivative=G_prime,
                             tolerance=1e-5)
@@ -337,7 +336,7 @@ def backward_euler(f,
             ###########################################################
             #   Compute the function value of the next time step.
             ###########################################################
-            result[i] = result[i-1] + t_step * f(t + t_step, y_next)
+            result[i] = result[i-1] + t_step * f(t, y_next)
 
         t += t_step
 
@@ -382,10 +381,10 @@ def crank_nicolson(f,
         specified in n_steps.
     """
     t_step = (t_end - t_start) / n_steps
-    result = np.empty(n_steps)
+    result = np.empty(n_steps + 1)
     t = t_start
 
-    for i in range(n_steps):
+    for i in range(n_steps + 1):
         if t == t_start:
             result[i] = init_cond
         else:
@@ -394,23 +393,23 @@ def crank_nicolson(f,
             #   iterator.
             ###########################################################
             G = lambda y_next : y_next - result[i-1]\
-                                - t_step * f(t + t_step, y_next)
-            G_prime = lambda y_next : 1 - t_step * f_prime(t + t_step, y_next)
+                                - t_step * f(t, y_next)
+            G_prime = lambda y_next : 1 - t_step * f_prime(t, y_next)
 
             ###########################################################
             #   Approximate y_(n+1) using the Newton iterator. y_next
             #   will be used to determine the result for the next time
             #   step.
             ###########################################################
-            y_next = newton(init=result[i],
+            y_next = newton(init=result[i-1],
                             function=G,
                             derivative=G_prime)
 
             ###########################################################
             #   Compute the function value of the next time step.
             ###########################################################
-            result[i] = result[i-1] + 1/2 * t_step * (f(t, result[i-1])
-                                                      + f(t + t_step, y_next))
+            result[i] = result[i-1] + 1/2 * t_step * (f(t - t_step, result[i-1])
+                                                      + f(t, y_next))
 
         t += t_step
 
@@ -520,7 +519,8 @@ def main():
     ###################################################################
     rc('font',
        **{'family':'serif',
-          'serif':['Computer Modern Roman']})
+          'serif':['Computer Modern Roman']},
+       size = 9)
     rc('text', usetex=True)
 
     ###################################################################
@@ -569,7 +569,7 @@ def main():
         for i, n_steps in enumerate(time_steps):
             t = np.linspace(start=0,
                             stop=3,
-                            num=n_steps,
+                            num=n_steps + 1,
                             endpoint=True)
             axis.plot(t,
                      method[i],
@@ -628,10 +628,10 @@ def main():
     plt.subplots_adjust(left=0.095,
                         bottom=0.185,
                         right=0.975,
-                        top=0.97,
+                        top=0.94,
                         hspace=0.075,
                         wspace=0.075)
-
+    fig.suptitle('Four different numerical ODE solvers', size = 11)
     ###################################################################
     #   Save the Figure as pdf in the current working directory.
     ###################################################################
