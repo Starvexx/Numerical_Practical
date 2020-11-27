@@ -16,3 +16,6 @@ Presentations/
 *.log
 *.pdf
 
+# Exclude submission archives.
+#
+*.tar.gz
