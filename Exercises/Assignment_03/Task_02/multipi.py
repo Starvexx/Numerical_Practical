@@ -1,26 +1,13 @@
 #! /usr/bin/env python3
-"""Direct Simulation Monte Carlo Demo
+"""Multiprocessing Direct Simulation Monte Carlo
 
     Author:         David Hernandez
     Matr. Nr.:      01601331
     e-Mail:         david.hernandez@univie.ac.at
-    Created:        27.10.2020
-    Last edited:    30.10.2020
+    Created:        30.11.2020
+    Last edited:    30.11.2020
 
-This is a Demo-script to demonstrate the Direct Simulation Monte Carlo
-Method. Here Pi is computed. This is done by creating a square domain
-with a side length of l. Within this domain we define a circular disc
-with radius r=l/2. Now a number of points are distributed arbitrarily
-over the whole domain. By counting the number of points within the
-disc, dividing that number by the total number of point and multiplying
-by four, we get an approximation for Pi.
-
-            n_total
-        π ≈ -------- * 4
-            n_inside
-
-Where n_total is the total number of points and n_inside is the number
-of points inside the circular disc.
+Description...
 """
 
 #######################################################################
@@ -32,15 +19,11 @@ import warnings
 import sys
 
 import numpy as np
-from numpy.random import seed
-from numpy.random import randint
+
+from multiprocessing import Pool
 
 from matplotlib import rc
 from matplotlib import pyplot as plt
-
-#######################################################################
-#   Classes used in this file.
-#######################################################################
 
 class MyPi:
     """A class to compute Pi.
@@ -215,167 +198,28 @@ class MyPi:
         return (__sum1 / __sum2) * 4
 
 
+def get_pi(obj, particles):
+    obj.clear_domain()
+    obj.launch_particles(particles)
+    return obj.compute()
+
 #######################################################################
 #   Main function.
 #######################################################################
 
 def main():
-    """Main subroutine.
+    """Main subroutine"""
+    test = MyPi(5)
 
-    Here the actual work is done, The computation runs ten times to
-    show the random nature of the DSMC method. The median of each run
-    is stored to a numpy.array and finally printed to stdout.
-    Additionally all plots are produced here.
-    """
-
-    print('Let´s have some Pi ;D')
-
-    ###################################################################
-    #   Create a new MyPi class object, get the maximum number of
-    #   particles that will be generated and initialize the results
-    #   array for the ten runs.
-    ###################################################################
-    test = MyPi(1001)
     n_max = int(sys.argv[1])
-    pi_median = np.zeros(10)
+    cores = int(sys.argv[2])
 
-    ###################################################################
-    #   Run the computation ten times.
-    ###################################################################
-    for i in range(10):
-        ###############################################################
-        #   Set up the progress bar.
-        ###############################################################
-        sys.stdout.write(f'Progress: [{"-" * 50}]')
-        sys.stdout.flush()
-        sys.stdout.write("\b" * 51)
+    particles = np.arange(0, n_max, 1, dtype=int)
 
-        ###############################################################
-        #   Create the result array for the individual runs. Each run
-        #   will compute pi for all numbers of particles in n_max.
-        ###############################################################
-        pi = np.zeros(n_max)
-        for j, n in enumerate(range(n_max)):
-            ###########################################################
-            #   Update progress bar.
-            ###########################################################
-            if n % int(n_max / 50) == 0:
-                sys.stdout.write("#")
-                sys.stdout.flush()
+    results = []
 
-            test.clear_domain()         # Clear MC-Domain to all zeros.
-            test.launch_particles(n)    # Launch particles.
-            pi[j] = test.compute()      # Compute Pi.
-        sys.stdout.write("]\n")
 
-        ###############################################################
-        #   Compute the median of the current run.
-        ###############################################################
-        pi_median[i] = np.median(pi)
 
-    ###################################################################
-    #   Compute the residual from the median of each run.
-    ###################################################################
-    residual = pi_median - np.pi
-
-    ###################################################################
-    #   Clear the Domain and launch 1000 new particles. This is used
-    #   for the Domain plot.
-    ###################################################################
-    test.clear_domain()
-    test.launch_particles(1000)
-
-    print(f'Pi:\t\t{pi_median}')
-    print(f'Residual:\t{residual}')
-
-    ###################################################################
-    #   Set LaTeX font to default used in LaTeX documents.
-    ###################################################################
-    rc('font',
-       **{'family':'serif',
-          'serif':['Computer Modern Roman']},
-       size = 9)
-    rc('text', usetex=True)
-
-    ###################################################################
-    #   Create new matplotlib.pyplot figure with subplots.
-    ###################################################################
-    fig = plt.figure(figsize=(7.27126, 2.5))       #   figsize in inches
-
-    ###################################################################
-    #   Plot the data.
-    #   ax1: The computed values for pi.
-    #   ax2: The residuals.
-    #   ax2: The simulation domain.
-    ###################################################################
-    ax1 = fig.add_subplot(131)
-    ax2 = fig.add_subplot(132)
-    ax3 = fig.add_subplot(133)
-
-    ax1.grid(True, which='major', linewidth=0.5)
-    ax2.grid(True, which='major', linewidth=0.5)
-    ax3.grid(False)
-
-    ax1.plot(np.arange(0, len(pi), 1), pi, lw=0.5)
-    ax2.plot(np.arange(0, len(pi), 1), pi - np.pi, lw=0.5)
-    ax3.scatter(test.x, test.y, s=0.2, color='red')
-    ax3.imshow(test.mask, alpha=0.5, cmap='brg')
-
-    ###################################################################
-    #   Format the subplot.
-    ###################################################################
-
-    props = dict(boxstyle='round',
-                 facecolor='white',
-                 edgecolor='gray',
-                 linewidth=0.5,
-                 alpha=1)
-    ax1.text(0.5, 0.9, f'Median: {pi_median[0]:.3f}',
-             transform=ax1.transAxes,
-             verticalalignment='center',
-             horizontalalignment='center',
-             bbox=props)
-
-    ax2.text(0.5, 0.9, f'Median: {(pi_median[0] - np.pi):.3f}',
-             transform=ax2.transAxes,
-             verticalalignment='center',
-             horizontalalignment='center',
-             bbox=props)
-
-    ax1.set_title('DSMC Pi', size=12)
-    ax1.set_xlabel('Number of points, M')
-    ax1.set_ylabel('Calculated value of \(\pi\)')
-    ax1.axhline(pi_median[0], color='black', lw=0.5, alpha=0.5)
-
-    ax2.set_title('DSMC Residuals', size=12)
-    ax2.set_xlabel('Number of points, M')
-    ax2.set_ylabel('Residuals: \(\pi - \mathrm{npumpy.pi}\)')
-    ax2.axhline(pi_median[0] - np.pi, color='black', lw=0.5, alpha=0.5)
-
-    ax3.set_title('DSMC Domain', size=12)
-    ax3.set_xlabel('x range')
-    ax3.set_ylabel('y range')
-    ax3.set_aspect(aspect='equal')
-    ax3.axhline(test.size / 2, color='black', lw=0.5, alpha=0.5)
-    ax3.axvline(test.size / 2, color='black', lw=0.5, alpha=0.5)
-
-    fig.subplots_adjust(top=0.88,
-                        bottom=0.175,
-                        left=0.065,
-                        right=0.965,
-                        hspace=0.2,
-                        wspace=0.32)
-
-    ###################################################################
-    #   Save the Figure to a file in the current working
-    #   directory.
-    ###################################################################
-    plt.savefig('pi_asdf.pdf', format='pdf')
-
-    ###################################################################
-    #   Show the plot in in a popup window.
-    ###################################################################
-    plt.show()
 
 if __name__ == '__main__':
     main()

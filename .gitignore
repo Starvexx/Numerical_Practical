@@ -2,6 +2,7 @@
 #
 Literature/
 Presentations/
+__pycache__/
 
 # Exclude saved plots. They are saved as .svg and .pdf files
 # 
