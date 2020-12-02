@@ -260,15 +260,17 @@ def main():
     particles = np.arange(0, n_max, 1, dtype=int)
 
     if benchmark:
-        runtime = np.zeros(max_cores)
-        for i, core in enumerate(np.arange(1, cores, 1)):
+        runtimes = np.zeros(max_cores)
+        for i, core in enumerate(np.arange(1, cores + 1, 1)):
             t_start = time()
             print(f'Running with {core} cores...')
             with Pool(processes=core) as pool:
                 results = pool.map(get_pi, particles)
-            runtime[i] = time() - t_start
+            runtimes[i] = time() - t_start
 
-    print(runtime)
+    for i, runtime in enumerate(runtimes):
+        print(f'\nRuntime with {i + 1} cores used:\t{runtime}\n'
+            + f'\t\t  Speedup:\t{runtimes[0]/runtime}')
 
 
 if __name__ == '__main__':
