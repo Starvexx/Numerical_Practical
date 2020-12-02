@@ -50,8 +50,6 @@ class MyPi:
 
     Methods:
     --------
-    clear_domain(self):
-        Clears all particles from the domain.
     launch_particles(self, n):
         Launches n particles. If n is zero, the no_particles attribute
         flag is set to True.
@@ -124,12 +122,7 @@ class MyPi:
 
     def __del__(self):
         """Destructor."""
-        print('MyPi destructed.')
-
-
-    def clear_domain(self):
-        """Reset the domain to all zeros."""
-        self.domain = np.zeros((self.size, self.size), dtype=int)
+        print('Object deleted.')
 
 
     def launch_particles(self, n):
@@ -146,6 +139,11 @@ class MyPi:
             The number of particles generated.
 
         """
+        ###############################################################
+        #   Clear the domain.
+        ###############################################################
+        self.domain = np.zeros((self.size, self.size), dtype=int)
+
         if n != 0:
             ###########################################################
             #   Generate the x and y coordinates of the particles.
@@ -263,7 +261,7 @@ def main():
                 sys.stdout.write("#")
                 sys.stdout.flush()
 
-            test.clear_domain()         # Clear MC-Domain to all zeros.
+            # test.clear_domain()         # Clear MC-Domain to all zeros.
             test.launch_particles(n)    # Launch particles.
             pi[j] = test.compute()      # Compute Pi.
         sys.stdout.write("]\n")
@@ -278,11 +276,15 @@ def main():
     ###################################################################
     residual = pi_median - np.pi
 
+    with open('results.txt', 'w') as out:
+        out.write(f'Median:\t{pi_median}\nResults:\t{pi}\n'
+                  + f'Residuals:\t{residual}')
+
     ###################################################################
     #   Clear the Domain and launch 1000 new particles. This is used
     #   for the Domain plot.
     ###################################################################
-    test.clear_domain()
+    # test.clear_domain()
     test.launch_particles(1000)
 
     print(f'Pi:\t\t{pi_median}')
@@ -370,7 +372,7 @@ def main():
     #   Save the Figure to a file in the current working
     #   directory.
     ###################################################################
-    plt.savefig('pi_asdf.pdf', format='pdf')
+    # plt.savefig('pi.pdf', format='pdf')
 
     ###################################################################
     #   Show the plot in in a popup window.

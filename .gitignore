@@ -16,6 +16,7 @@ __pycache__/
 *.aux
 *.log
 *.pdf
+*.swp
 
 # Exclude submission archives.
 #

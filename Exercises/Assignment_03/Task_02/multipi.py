@@ -19,11 +19,20 @@ import warnings
 import sys
 
 import numpy as np
+from numpy.random import seed
+from numpy.random import randint
+
+from time import time
 
 from multiprocessing import Pool
+from multiprocessing import cpu_count
 
 from matplotlib import rc
 from matplotlib import pyplot as plt
+
+#######################################################################
+#   Classes used in this file.
+#######################################################################
 
 class MyPi:
     """A class to compute Pi.
@@ -33,8 +42,6 @@ class MyPi:
 
     Methods:
     --------
-    clear_domain(self):
-        Clears all particles from the domain.
     launch_particles(self, n):
         Launches n particles. If n is zero, the no_particles attribute
         flag is set to True.
@@ -107,12 +114,8 @@ class MyPi:
 
     def __del__(self):
         """Destructor."""
-        print('MyPi destructed.')
-
-
-    def clear_domain(self):
-        """Reset the domain to all zeros."""
-        self.domain = np.zeros((self.size, self.size), dtype=int)
+        # print('Object deleted.')
+        pass
 
 
     def launch_particles(self, n):
@@ -129,6 +132,11 @@ class MyPi:
             The number of particles generated.
 
         """
+        ###############################################################
+        #   Clear the domain.
+        ###############################################################
+        self.domain = np.zeros((self.size, self.size), dtype=int)
+
         if n != 0:
             ###########################################################
             #   Generate the x and y coordinates of the particles.
@@ -198,27 +206,69 @@ class MyPi:
         return (__sum1 / __sum2) * 4
 
 
-def get_pi(obj, particles):
-    obj.clear_domain()
-    obj.launch_particles(particles)
-    return obj.compute()
+
+def get_pi(particles):
+    """Wrapper function to compute pi using a MyPi Class Object"""
+    pi = MyPi(1001)
+    pi.launch_particles(particles)
+    result = pi.compute()
+    del pi
+    return result
 
 #######################################################################
 #   Main function.
 #######################################################################
 
 def main():
-    """Main subroutine"""
-    test = MyPi(5)
+    """Main subroutine.
 
+    Three general modes of operation can be chosen.
+        - Normal: Runs the code with the specified amount of CPU cores,
+                  physical or logical. (CL arguments ranging from one
+                  to the maximum number of cores)
+        - Auto:   Runs the code with the maximum available cores,
+                  physical or logical. (CL argument 0)
+        - Bench:  Runs the code in benchmark mode. The code is run
+                  multiple times, each time with an increased number of
+                  CPU cores to assert the performance increase.
+                  (CL argument is negative)
+    """
     n_max = int(sys.argv[1])
     cores = int(sys.argv[2])
+    try:
+        max_cores = cpu_count()
+    except:
+        print('Unable to get maximum number of cores.')
+        print('Setting max cores to 1!')
+        print('Automatic and Benchmark modes compromised.')
+        print('Running on single core...')
+        max_cores = 1
+
+    ###################################################################
+    #   Check if a valid number of cores was selected. The number of
+    #   cores defines the mode of the program.
+    ###################################################################
+    if cores == 0 or cores > max_cores:
+        cores = max_cores
+        benchmark = False
+    elif cores < 0:
+        cores = max_cores
+        benchmark = True
+
+    print(cores)
 
     particles = np.arange(0, n_max, 1, dtype=int)
 
-    results = []
+    if benchmark:
+        runtime = np.zeros(max_cores)
+        for i, core in enumerate(np.arange(1, cores, 1)):
+            t_start = time()
+            print(f'Running with {core} cores...')
+            with Pool(processes=core) as pool:
+                results = pool.map(get_pi, particles)
+            runtime[i] = time() - t_start
 
-
+    print(runtime)
 
 
 if __name__ == '__main__':
