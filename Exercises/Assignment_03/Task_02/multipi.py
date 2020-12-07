@@ -23,6 +23,7 @@ from numpy.random import seed
 from numpy.random import randint
 
 from time import time
+from time import sleep
 
 from multiprocessing import Pool
 from multiprocessing import cpu_count
@@ -215,6 +216,36 @@ def get_pi(particles):
     del pi
     return result
 
+
+def parallelize(task, arguments, cores):
+        pool = Pool(cores)
+        results = []
+        for argument in arguments:
+            results.append(pool.apply_async(task, [argument]))
+
+        sys.stdout.write(f'Progress: [{"-" * 50}]')
+        sys.stdout.flush()
+        sys.stdout.write("\b" * 51)
+
+        while True:
+            complete = sum(1 for result in results if result.ready())
+            comp_percent = 100 * complete / len(results)
+
+            if complete % int(len(results) / 50) == 0:
+                sys.stdout.write("#" * int(comp_percent / 2))
+                sys.stdout.write("\b" * int(comp_percent / 2))
+                sys.stdout.flush()
+
+            if complete == len(results):
+                break
+
+        sys.stdout.write("#" * 50 + "]\n")
+        pool.close()
+        pool.join()
+
+        return results
+
+
 #######################################################################
 #   Main function.
 #######################################################################
@@ -249,28 +280,121 @@ def main():
     #   cores defines the mode of the program.
     ###################################################################
     if cores == 0 or cores > max_cores:
+        if cores > max_cores:
+            warnings.warn(f'Invalid number of CPU cores chosen. '
+                          + f'Using {max_cores} cores!', UserWarning)
         cores = max_cores
         benchmark = False
     elif cores < 0:
         cores = max_cores
         benchmark = True
-
-    print(cores)
+    else:
+        benchmark = False
 
     particles = np.arange(0, n_max, 1, dtype=int)
 
     if benchmark:
+        print("Benchmark mode entered...")
+        print("Assessing performance for various numbers of CPU cores.")
         runtimes = np.zeros(max_cores)
         for i, core in enumerate(np.arange(1, cores + 1, 1)):
             t_start = time()
             print(f'Running with {core} cores...')
-            with Pool(processes=core) as pool:
-                results = pool.map(get_pi, particles)
+            res = parallelize(get_pi, particles, core)
             runtimes[i] = time() - t_start
 
-    for i, runtime in enumerate(runtimes):
-        print(f'\nRuntime with {i + 1} cores used:\t{runtime}\n'
-            + f'\t\t  Speedup:\t{runtimes[0]/runtime}')
+        for i, runtime in enumerate(runtimes):
+            print(f'\nRuntime with {i + 1} cores used:\t{runtime:.3f}\n'
+                    + f'\t\t  Speedup:\t{runtimes[0]/runtime:.3f}')
+    else:
+        print(f'Running with {cores} cores...')
+        res = parallelize(get_pi, particles, cores)
+
+    results = []
+    for result in res:
+        results.append(result.get())
+    results = np.array(results)
+
+    residuals = results - np.pi
+    pi_mean = np.mean(results)
+
+    ###################################################################
+    #   Set LaTeX font to default used in LaTeX documents.
+    ###################################################################
+    rc('font',
+       **{'family':'serif',
+          'serif':['Computer Modern Roman']},
+       size = 9)
+    rc('text', usetex=True)
+
+    ###################################################################
+    #   Create new matplotlib.pyplot figure with subplots.
+    ###################################################################
+    fig = plt.figure(figsize=(7.27126, 2.5))       #   figsize in inches
+
+    ###################################################################
+    #   Plot the data.
+    #   ax1: The computed values for pi.
+    #   ax2: The residuals.
+    #   ax2: The simulation domain.
+    ###################################################################
+    ax1 = fig.add_subplot(121)
+    ax2 = fig.add_subplot(122)
+
+    ax1.grid(True, which='major', linewidth=0.5)
+    ax2.grid(True, which='major', linewidth=0.5)
+
+    ax1.plot(np.arange(0, len(results), 1), results, lw=0.5)
+    ax2.plot(np.arange(0, len(results), 1), results - np.pi, lw=0.5)
+
+    ###################################################################
+    #   Format the subplot.
+    ###################################################################
+
+    props = dict(boxstyle='round',
+                 facecolor='white',
+                 edgecolor='gray',
+                 linewidth=0.5,
+                 alpha=1)
+    ax1.text(0.5, 0.9, f'Mean: {pi_mean:.3f}',
+             transform=ax1.transAxes,
+             verticalalignment='center',
+             horizontalalignment='center',
+             bbox=props)
+
+    ax2.text(0.5, 0.9, f'Mean: {(pi_mean - np.pi):.3f}',
+             transform=ax2.transAxes,
+             verticalalignment='center',
+             horizontalalignment='center',
+             bbox=props)
+
+    ax1.set_title('DSMC Pi', size=12)
+    ax1.set_xlabel('Number of points, M')
+    ax1.set_ylabel('Calculated value of \(\pi\)')
+    ax1.axhline(pi_mean, color='black', lw=0.5, alpha=0.5)
+
+    ax2.set_title('DSMC Residuals', size=12)
+    ax2.set_xlabel('Number of points, M')
+    ax2.set_ylabel('Residuals: \(\pi - \mathrm{npumpy.pi}\)')
+    ax2.axhline(pi_mean - np.pi, color='black', lw=0.5, alpha=0.5)
+
+    fig.subplots_adjust(top=0.88,
+                        bottom=0.175,
+                        left=0.065,
+                        right=0.965,
+                        hspace=0.2,
+                        wspace=0.32)
+
+    ###################################################################
+    #   Save the Figure to a file in the current working
+    #   directory.
+    ###################################################################
+    plt.savefig('multipi.pdf', format='pdf')
+
+    ###################################################################
+    #   Show the plot in in a popup window.
+    ###################################################################
+    plt.show()
 
 
 if __name__ == '__main__':

@@ -57,7 +57,7 @@ class MyPi:
         Get the approximation for Pi.
 
     Attributes:
-    self.size:
+    self.size : scalar
         The size of the domain.
     self.domain : 2D numpy.array
         The simulation domain is a two dimensional square of user
@@ -231,14 +231,15 @@ def main():
     ###################################################################
     #   Create a new MyPi class object, get the maximum number of
     #   particles that will be generated and initialize the results
-    #   array for the ten runs.
+    #   array for ten individual runs.
     ###################################################################
-    test = MyPi(1001)
+    pi = MyPi(1001)
     n_max = int(sys.argv[1])
     pi_median = np.zeros(10)
 
     ###################################################################
-    #   Run the computation ten times.
+    #   Run the computation ten times to see the differences due to the
+    #   random nature of the DSMC method.
     ###################################################################
     for i in range(10):
         ###############################################################
@@ -252,7 +253,7 @@ def main():
         #   Create the result array for the individual runs. Each run
         #   will compute pi for all numbers of particles in n_max.
         ###############################################################
-        pi = np.zeros(n_max)
+        results = np.zeros(n_max)
         for j, n in enumerate(range(n_max)):
             ###########################################################
             #   Update progress bar.
@@ -261,15 +262,17 @@ def main():
                 sys.stdout.write("#")
                 sys.stdout.flush()
 
-            # test.clear_domain()         # Clear MC-Domain to all zeros.
-            test.launch_particles(n)    # Launch particles.
-            pi[j] = test.compute()      # Compute Pi.
+            ###########################################################
+            #   Clear domain, launch particles and compute the result.
+            ###########################################################
+            pi.launch_particles(n)
+            results[j] = pi.compute()
         sys.stdout.write("]\n")
 
         ###############################################################
         #   Compute the median of the current run.
         ###############################################################
-        pi_median[i] = np.median(pi)
+        pi_median[i] = np.median(results)
 
     ###################################################################
     #   Compute the residual from the median of each run.
@@ -284,8 +287,7 @@ def main():
     #   Clear the Domain and launch 1000 new particles. This is used
     #   for the Domain plot.
     ###################################################################
-    # test.clear_domain()
-    test.launch_particles(1000)
+    pi.launch_particles(1000)
 
     print(f'Pi:\t\t{pi_median}')
     print(f'Residual:\t{residual}')
@@ -318,10 +320,10 @@ def main():
     ax2.grid(True, which='major', linewidth=0.5)
     ax3.grid(False)
 
-    ax1.plot(np.arange(0, len(pi), 1), pi, lw=0.5)
-    ax2.plot(np.arange(0, len(pi), 1), pi - np.pi, lw=0.5)
-    ax3.scatter(test.x, test.y, s=0.2, color='red')
-    ax3.imshow(test.mask, alpha=0.5, cmap='brg')
+    ax1.plot(np.arange(0, len(results), 1), results, lw=0.5)
+    ax2.plot(np.arange(0, len(results), 1), results - np.pi, lw=0.5)
+    ax3.scatter(pi.x, pi.y, s=0.2, color='red')
+    ax3.imshow(pi.mask, alpha=0.5, cmap='brg')
 
     ###################################################################
     #   Format the subplot.
@@ -332,13 +334,13 @@ def main():
                  edgecolor='gray',
                  linewidth=0.5,
                  alpha=1)
-    ax1.text(0.5, 0.9, f'Median: {pi_median[0]:.3f}',
+    ax1.text(0.5, 0.9, f'Median: {pi_median[9]:.3f}',
              transform=ax1.transAxes,
              verticalalignment='center',
              horizontalalignment='center',
              bbox=props)
 
-    ax2.text(0.5, 0.9, f'Median: {(pi_median[0] - np.pi):.3f}',
+    ax2.text(0.5, 0.9, f'Median: {(pi_median[9] - np.pi):.3f}',
              transform=ax2.transAxes,
              verticalalignment='center',
              horizontalalignment='center',
@@ -358,8 +360,8 @@ def main():
     ax3.set_xlabel('x range')
     ax3.set_ylabel('y range')
     ax3.set_aspect(aspect='equal')
-    ax3.axhline(test.size / 2, color='black', lw=0.5, alpha=0.5)
-    ax3.axvline(test.size / 2, color='black', lw=0.5, alpha=0.5)
+    ax3.axhline(pi.size / 2, color='black', lw=0.5, alpha=0.5)
+    ax3.axvline(pi.size / 2, color='black', lw=0.5, alpha=0.5)
 
     fig.subplots_adjust(top=0.88,
                         bottom=0.175,
@@ -372,7 +374,7 @@ def main():
     #   Save the Figure to a file in the current working
     #   directory.
     ###################################################################
-    # plt.savefig('pi.pdf', format='pdf')
+    plt.savefig('pi.pdf', format='pdf')
 
     ###################################################################
     #   Show the plot in in a popup window.
