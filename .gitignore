@@ -9,6 +9,8 @@ __pycache__/
 *.svg
 *.log
 *.txt
+*.bbl
+*.blg
 
 # Exclude metafiles in Report folder.
 #
@@ -17,6 +19,7 @@ __pycache__/
 *.log
 *.pdf
 *.swp
+*.out
 
 # Exclude submission archives.
 #

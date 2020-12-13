@@ -221,7 +221,7 @@ def main():
     """Main subroutine.
 
     Here the actual work is done, The computation runs ten times to
-    show the random nature of the DSMC method. The median of each run
+    show the random nature of the DSMC method. The mean of each run
     is stored to a numpy.array and finally printed to stdout.
     Additionally all plots are produced here.
     """
@@ -235,7 +235,7 @@ def main():
     ###################################################################
     pi = MyPi(1001)
     n_max = int(sys.argv[1])
-    pi_median = np.zeros(10)
+    pi_mean = np.zeros(10)
 
     ###################################################################
     #   Run the computation ten times to see the differences due to the
@@ -270,17 +270,22 @@ def main():
         sys.stdout.write("]\n")
 
         ###############################################################
-        #   Compute the median of the current run.
+        #   Compute the mean of the current run.
         ###############################################################
-        pi_median[i] = np.median(results)
+        pi_mean[i] = np.mean(results)
 
     ###################################################################
-    #   Compute the residual from the median of each run.
+    #   Compute the residual from the mean of each run.
     ###################################################################
-    residual = pi_median - np.pi
+    residual = pi_mean - np.pi
+
+    upper_percentile = int(len(results) - len(results)/10)
+
+    upper = np.max(results[upper_percentile:])
+    lower = np.min(results[upper_percentile:])
 
     with open('results.txt', 'w') as out:
-        out.write(f'Median:\t{pi_median}\nResults:\t{pi}\n'
+        out.write(f'Mean:\t{pi_mean}\nResults:\t{pi}\n'
                   + f'Residuals:\t{residual}')
 
     ###################################################################
@@ -289,8 +294,9 @@ def main():
     ###################################################################
     pi.launch_particles(1000)
 
-    print(f'Pi:\t\t{pi_median}')
-    print(f'Residual:\t{residual}')
+    print(f'Pi:\t\t{pi_mean[9]:.3f} +{(upper-pi_mean[9]):.3f} ' +
+            f'-{(pi_mean[9]-lower):.3f}')
+    print(f'Residual:\t{residual[9]}')
 
     ###################################################################
     #   Set LaTeX font to default used in LaTeX documents.
@@ -334,13 +340,13 @@ def main():
                  edgecolor='gray',
                  linewidth=0.5,
                  alpha=1)
-    ax1.text(0.5, 0.9, f'Median: {pi_median[9]:.3f}',
+    ax1.text(0.5, 0.9, f'Mean: {pi_mean[9]:.3f}',
              transform=ax1.transAxes,
              verticalalignment='center',
              horizontalalignment='center',
              bbox=props)
 
-    ax2.text(0.5, 0.9, f'Median: {(pi_median[9] - np.pi):.3f}',
+    ax2.text(0.5, 0.9, f'Mean: {(pi_mean[9] - np.pi):.3f}',
              transform=ax2.transAxes,
              verticalalignment='center',
              horizontalalignment='center',
@@ -349,12 +355,12 @@ def main():
     ax1.set_title('DSMC Pi', size=12)
     ax1.set_xlabel('Number of points, M')
     ax1.set_ylabel('Calculated value of \(\pi\)')
-    ax1.axhline(pi_median[0], color='black', lw=0.5, alpha=0.5)
+    ax1.axhline(pi_mean[0], color='black', lw=0.5, alpha=0.5)
 
     ax2.set_title('DSMC Residuals', size=12)
     ax2.set_xlabel('Number of points, M')
     ax2.set_ylabel('Residuals: \(\pi - \mathrm{npumpy.pi}\)')
-    ax2.axhline(pi_median[0] - np.pi, color='black', lw=0.5, alpha=0.5)
+    ax2.axhline(pi_mean[0] - np.pi, color='black', lw=0.5, alpha=0.5)
 
     ax3.set_title('DSMC Domain', size=12)
     ax3.set_xlabel('x range')

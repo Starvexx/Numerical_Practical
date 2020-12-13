@@ -59,7 +59,7 @@
 17, 1180 Wien, Austria}
 
 \date{Deadline: December 12\textsuperscript{th}, 2020 / Submitted: December
-5\textsuperscript{th}, 2020}
+11\textsuperscript{th}, 2020}
 
 \abstract{Two Python scripts were written in order to compute the constant Pi (\(\pi\)) using
 the Direct Simulation Monte Carlo (DSMC) method. To achieve this goal a python class was
@@ -274,7 +274,7 @@ Finally the estimated values for pi and the residuals from each of the ten runs 
 of the results produced in one run. The results from the last run are then used to create the
 plots that show convergence. To plot the domain, 1000 particles are launched, so that the
 random distribution of particles can be shown.
-\begin{lstlisting}[firstnumber=290]
+\begin{lstlisting}[firstnumber=295]
 pi.launch_particles(1000)
 \end{lstlisting}
 
@@ -306,6 +306,14 @@ Line numbers in the following code listings correspond to the line numbers in th
 \verb+multipi.py+ script. This script uses the same \verb+MyPi+ class that is described in
 detail in Section \ref{sub:task_1}. Therefore only the main subroutine and the \verb+get_pi()+
 wrapper function will be discussed here.
+
+\begin{figure*}[htbp]
+    \centering
+    \captionsetup{width = 0.9 \linewidth}
+    \resizebox{\textwidth}{!}{\includegraphics{../Task_01/pi.pdf}}
+    \caption{Results of Task 1.}
+    \label{fig:Pi_final}
+\end{figure*}
 
 \paragraph{Wrapper function:} In order utilize multiprocessing for this code, all operations
 that are done in one iteration, must be callable in a function, as is shown in the pseudo code
@@ -342,6 +350,42 @@ of operation.
         time with an increased number of CPU cores to assess the performance increase. This
         mode is activated by giving any negative number as command line argument.
 \end{description}
+However to implement a progressbar another helper function \verb+parallelize()+, which takes
+arguments \verb+task+, \verb+arguments+ and \verb+cores+. The first argument is the
+\verb+get_pi()+ wrapper function, the second argument are function arguments passed to
+\verb+get_pi()+ and finally the last argument are the number of cores that shall be used for
+the computation. In a loop the different particle numbers are are passed to the
+\verb+apply_async()+ method of the \verb+Pool+ class from the \verb+multiprocessing+ package.
+The results from each task (in our case this is \verb+get_pi()+) are appended to a list as
+\verb+AsyncResult+ Objects. The actual result can be retrieved from the \verb+AsyncResult+
+Object by calling its \verb+get()+ method as is shown below for the \verb+multipi.py+ code.
+\begin{lstlisting}[firstnumber=314]
+for result in res:
+    results.append(result.get())
+\end{lstlisting}
+Where \verb+res+ is a list of \verb+AsyncResult+ Objects, and \verb+results+ a new list that
+will hold the actual results returned by \verb+get_pi()+. The progessbar mentioned above is not
+a true gauge of the progress, but rather represents the number of finished \verb+apply_async()+
+tasks. Finally for the results to be returned by \verb+apply_async()+, the \verb+Pool+ needs to
+be closed and joined.
+\begin{lstlisting}[firstnumber=243]
+pool.close()
+pool.join()
+\end{lstlisting}
 
+\section{Results}%
+\label{sec:results}
+
+Both scripts seem to be able to approximate \(\pi\) to \(3.136_{-0.067}^{+0.056}\) both times.
+Also the parallelized version of the script was able to speed up the computation by a factor of
+2.703 with 8 cores compared to single core computation.
+
+\begin{figure*}[htbp]
+    \centering
+    \captionsetup{width = 0.9 \linewidth}
+    \resizebox{\textwidth}{!}{\includegraphics{../Task_02/multipi_8_cores.pdf}}
+    \caption{Results of Task 2.}
+    \label{fig:Multipi_8_cores}
+\end{figure*}
 
 \end{document}

@@ -313,10 +313,15 @@ def main():
     results = []
     for result in res:
         results.append(result.get())
-    results = np.array(results)
 
+    results = np.array(results)
+    upper_percentile = int(len(results) - len(results)/10)
+
+    upper = np.max(results[upper_percentile:])
+    lower = np.min(results[upper_percentile:])
     residuals = results - np.pi
     pi_mean = np.mean(results)
+    print(f'Pi is {pi_mean:.3f} +{(upper-pi_mean):.3f} -{(pi_mean-lower):.3f}')
 
     ###################################################################
     #   Set LaTeX font to default used in LaTeX documents.
@@ -389,12 +394,12 @@ def main():
     #   Save the Figure to a file in the current working
     #   directory.
     ###################################################################
-    plt.savefig('multipi.pdf', format='pdf')
+    plt.savefig('multipi_8_cores.pdf', format='pdf')
 
     ###################################################################
     #   Show the plot in in a popup window.
     ###################################################################
-    plt.show()
+    # plt.show()
 
 
 if __name__ == '__main__':
