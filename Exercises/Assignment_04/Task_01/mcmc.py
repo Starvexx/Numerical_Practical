@@ -4,8 +4,8 @@
     Author:         David Hernandez
     Matr. Nr.:      01601331
     e-Mail:         david.hernandez@univie.ac.at
-    Created:        
-    Last edited:    
+    Created:        13.12.2020
+    Last edited:    16.12.2020
 
 Description...
 """
@@ -37,8 +37,8 @@ def read(filename):
 
 def likelihood(p, mu, sigma):
     """Compute likelihood."""
-    return np.log(np.sum(1/np.sqrt(2 * np.pi * sigma**2) * np.exp(- (p - mu)**2
-                                                    / (2 * sigma**2))))
+    return np.sum(np.log(1/np.sqrt(2 * np.pi * sigma**2)\
+                           * np.exp(- (p - mu)**2 / (2 * sigma**2))))
 
 
 def metropolis_hastings(p, mu, sigma):
@@ -48,7 +48,12 @@ def metropolis_hastings(p, mu, sigma):
 
     L_noise = likelihood(p, mu_noise, sigma_noise)
     L = likelihood(p, mu, sigma)
-    print(L, L_noise)
+
+    if L < L_noise:
+        return mu_noise, sigma_noise
+    else:
+        return mu, sigma
+
 
 #######################################################################
 #   Main function.
@@ -67,9 +72,65 @@ def main():
     mean_0 = mean + mean * factors[0]
     std_0 = std + std * factors[1]
 
-    metropolis_hastings(data, mean_0, std_0)
+    iters = 3000
+    means = np.zeros(iters)
+    stds = np.zeros(iters)
 
-    #print(mean, mean_0, std, std_0)
+    for i in range(iters):
+        means[i] = mean_0
+        stds[i] = std_0
+        mean_0, std_0 = metropolis_hastings(data, mean_0, std_0)
+
+    #print(means, stds)
+    #print(mean, std)
+
+    ###################################################################
+    #   Set LaTeX font to default used in LaTeX documents.
+    ###################################################################
+    rc('font',
+       **{'family':'serif',
+          'serif':['Computer Modern Roman']})
+    rc('text', usetex=True)
+
+    ###################################################################
+    #   Create new matplotlib.pyplot figure with subplots.
+    ###################################################################
+    fig = plt.figure(figsize=(6.3, 3.54))       #   figsize in inches
+
+    ###################################################################
+    #   Plot the data.
+    ###################################################################
+    ax1 = fig.add_subplot(221)
+    ax2 = fig.add_subplot(222)
+    ax3 = fig.add_subplot(223)
+    ax4 = fig.add_subplot(224)
+
+    ax1.grid(True, which='major', linewidth=0.5)
+
+    ax1.plot(np.arange(0, iters, 1), means)
+    ax2.plot(np.arange(0, iters, 1), stds)
+    ax3.plot(means, stds)
+    ax4.hist(data, [-20, -15, -10, -5, 0, 5, 10, 15], density=True)
+    ax4.scatter(data, stats.norm().pdf(data))
+
+    ###################################################################
+    #   Format the subplot.
+    ###################################################################
+    ax1.set_title('MCMC')
+    ax1.set_xlabel('\(\mu\)')
+    ax1.set_ylabel('\(\sigma\)')
+    ax1.legend()
+
+    ###################################################################
+    #   Save the Figure to a file in the current working
+    #   directory.
+    ###################################################################
+    #plt.savefig('mcmc.pdf', format='pdf')
+
+    ###################################################################
+    #   Show the plot in in a popup window.
+    ###################################################################
+    plt.show()
 
 
 if __name__ == '__main__':
