@@ -110,8 +110,9 @@ def main():
     ax1.plot(np.arange(0, iters, 1), means)
     ax2.plot(np.arange(0, iters, 1), stds)
     ax3.plot(means, stds)
-    ax4.hist(data, [-20, -15, -10, -5, 0, 5, 10, 15], density=True)
-    ax4.scatter(data, stats.norm().pdf(data))
+    bins = np.arange(int(np.min(data)), int(np.max(data)), 1)
+    ax4.hist(data, bins, density=True, alpha = 0.3)
+    ax4.scatter(data, stats.norm(loc=mean, scale=std).pdf(data), color='r')
 
     ###################################################################
     #   Format the subplot.
