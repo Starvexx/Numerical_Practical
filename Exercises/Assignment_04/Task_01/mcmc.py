@@ -130,12 +130,20 @@ def metropolis_hastings(p, mu, sigma):
     ###################################################################
     #   Compare the two likelihoods and if the new likelihood (with
     #   noise) is greater than the likelihood for the old parameter,
-    #   the parameters are updated, otherwise the old values are
-    #   returned.
+    #   the parameters are updated.
     ###################################################################
     if L < L_noise:
         return mu_noise, sigma_noise
 
+    ###################################################################
+    #   If the previous condition is not met, there is another chance
+    #   for the new values to be accepted. If the alpha is greater than
+    #   a random number between 0 and 1, then the new values can still
+    #   be accepted. Alpha is defined as follows:
+    #   
+    #           alpha = exp(L_noise - L)
+    #
+    ###################################################################
     alpha = np.exp(L_noise - L)
     r = np.random.uniform(0, 1)
     if r < alpha:
@@ -165,6 +173,8 @@ def main():
 
     ###################################################################
     #   starting values for mean and std: mean_0, std_0
+    #   Also check if std_0 is negative and make it positive when it is
+    #   smaller than 0.
     ###################################################################
     mean_0 = mean + mean * factors[0]
     std_0 = std + std * factors[1]
@@ -180,13 +190,28 @@ def main():
     stds = np.zeros(iters)
 
     ###################################################################
+    #   Set up progressbar.
+    ###################################################################
+    sys.stdout.write(f'Progress: [{"-" * 50}]')
+    sys.stdout.flush()
+    sys.stdout.write("\b" * 51)
+
+    ###################################################################
     #   Do the iterations for the random walk, and append the results
     #   of each run to the respective arrays.
     ###################################################################
     for i in range(iters):
+        ###############################################################
+        #   Update progressbar.
+        ###############################################################
+        if i % int(iters / 50) == 0:
+            sys.stdout.write("#")
+            sys.stdout.flush()
+
         means[i] = mean_0
         stds[i] = std_0
         mean_0, std_0 = metropolis_hastings(data, mean_0, std_0)
+    sys.stdout.write("]\n")
 
     ###################################################################
     #   Set LaTeX font to default used in LaTeX documents.
@@ -217,15 +242,24 @@ def main():
 
     ax1.plot(np.arange(0, iters, 1), means)
     ax2.plot(np.arange(0, iters, 1), stds)
-    ax3.plot(means, stds, alpha=0.3)
+    ax3.plot(means, stds, alpha=0.3, lw=0.5)
     ax3.scatter(means[0], stds[0], color='g')
     ax3.scatter(means[-1], stds[-1], color='r')
+
+    ###################################################################
+    #   Create the bins for the histogram and sort the data for the
+    #   PDF Plot.
+    ###################################################################
     bins = np.arange(int(np.min(data)), int(np.max(data)), 1)
     ax4.hist(data, bins, density=True, alpha = 0.3)
     sorted_data = np.sort(data, kind='quicksort')
     ax4.plot(sorted_data,
              stats.norm(loc=mean, scale=std).pdf(sorted_data),
-             color='r')
+             color='b', lw=0.5)
+    ax4.plot(sorted_data,
+             stats.norm(loc=np.mean(means[-1000:]),
+                        scale=np.mean(stds[-1000:])).pdf(sorted_data),
+             color='orange', lw=0.5)
 
     ###################################################################
     #   Format the subplot.
@@ -256,7 +290,7 @@ def main():
     #   Save the Figure to a file in the current working
     #   directory.
     ###################################################################
-    #plt.savefig('mcmc.pdf', format='pdf')
+    # plt.savefig('mcmc.pdf', format='pdf')
 
     ###################################################################
     #   Show the plot in in a popup window.

@@ -1,0 +1,180 @@
+\documentclass{aa}
+\usepackage[varg]{txfonts}
+\usepackage{nicefrac}
+\usepackage{caption}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{siunitx}
+\usepackage{tikz}
+\usepackage{hyperref}
+
+\definecolor{paper}{RGB}{235,213,179}
+\definecolor{orange}{RGB}{255,79,0}
+
+\hypersetup{colorlinks,
+            linkcolor=blue,
+            citecolor=blue,
+            urlcolor=blue}
+
+\begin{document}
+
+\lstset{language=Python,
+        xleftmargin=2em,
+        backgroundcolor=\color{paper},
+        numbers=left,
+        numbersep=5pt,
+        numberstyle=\tiny,
+        rulecolor=\color{black},
+        keywordstyle=\color{orange},
+        basicstyle=\footnotesize,
+        breaklines=true,
+        breakatwhitespace=true,
+        escapeinside=||}
+
+\let\origthelstnumber\thelstnumber
+\makeatletter
+\newcommand*\Suppressnumber{%
+  \lst@AddToHook{OnNewLine}{%
+    \let\thelstnumber\relax%
+     \advance\c@lstnumber-\@ne\relax%
+    }%
+}
+
+\newcommand*\Reactivatenumber[1]{%
+  \setcounter{lstnumber}{\numexpr#1-1\relax}
+  \lst@AddToHook{OnNewLine}{%
+   \let\thelstnumber\origthelstnumber%
+   \refstepcounter{lstnumber}
+  }%
+}
+
+\title{Assignment 4}
+
+\subtitle{Marcov Chain Monte Carlo}
+
+\author{David Hernandez\inst{1}}
+
+
+\institute{Universität Wien, Institut für Astrophysik, Türkenschanzstrasse
+17, 1180 Wien, Austria}
+
+\date{Deadline: December 19\textsuperscript{th}, 2020 / Submitted: December
+19\textsuperscript{th}, 2020}
+
+\abstract{}
+
+\keywords{Numerical methods -- Marcov Chain Monte Carlo}
+\maketitle
+
+\section{Introduction}%
+\label{sec:introduction}
+
+A Marcov Chain Monte Carlo (MCMC) simulation is another way to use statistics to compute
+certain parameters to a data set. For instance the following example will show, how a MCMC
+simulation is used to determine the mean value and the standard deviation of presumably normal
+distributed data, from an initial guess. The idea is to use a random walk approach to
+approximate these two parameters. A random walk insinuates, that any location in a City can be
+reached by randomly taking left or right turns, continue straight ahead or turn around at each
+intersection that is encountered. This principle is applied to the MCMC method in the following
+way.
+
+First initial values are guessed (or in our case, random noise is added to the values computed
+with \verb+numpy+) and passed to the \emph{Metropolis-Hastings} algorithm. Within this
+algorithm the Likelihoods for each of the parameters is calculated by taking the sum of the
+logarithms of the likelihoods of each data point within the set. The data points likelihood is
+determined as follows:
+\begin{equation}
+    \label{eqn:data_likelihood}
+    L_i = \frac{1}{\sqrt{2\pi\sigma^2}} \cdot \exp \left(- \frac{(p_i - \mu)^2}{2\sigma^2}
+    \right)
+\end{equation}
+So the likelihood for the parameters is:
+\begin{equation}
+    \label{eqn:parameter_likelihood}
+    L_\mathrm{param} = \sum\limits_{i=1}^N \log L_i
+\end{equation}
+Where \(N\) is the number of data points in the set and \(\log\) is the logarithmus naturalis.
+The whole algorithm is iterative, so each iteration takes the previous values, in the initial
+run this are the guessed starting values, and new proposed values. These new proposed values
+should randomly differ from the initial values. The likelihoods of both parameter sets are
+computed and then it is decided weather to update the parameters or use the old ones. The
+decision is made as is outlined below:
+\begin{lstlisting}[numbers=none]
+if L_old < L_new:
+    return new_parameters
+else:
+    alpha = exp(L_new - L_old)
+    r = random(0, 1)
+    if r < alpha:
+        return new_parameters
+    else:
+        return old_parameters
+\end{lstlisting}
+This corresponds to taking a random turn at each intersection when navigating in a city. Here
+\verb+alpha+, as is outlined above, is defined as \(\alpha = \exp(L_\mathrm{new} -
+L_\mathrm{old})\) and \(r\) is a random number between zero and one. This process is done a
+sufficient number of times. At the beginning, depending on the quality of the guess, there is a
+so called \emph{burn in} phase, in which the simulation needs time to converge towards the real
+value. After this phase the results of the computation will scatter around the true value.
+Therefor it is useful to take a statistical mean (i.e. the mean value or the median) of the
+last couple values.
+
+\section{Implementation}%
+\label{sec:implementation}
+
+\begin{figure*}[h]
+	\centering
+		\includegraphics[width=\textwidth]{../Task_01/mcmc.pdf}
+	\caption{\textbf{Top left:} The evolution of the mean with respect to the number of
+    iterations. \textbf{Top right:} The evolution of the standard deviation with respect to the
+    number of iterations. \textbf{Lower left:} This shows the trail of the random walk in the
+    \(\mu-\sigma\) parameter space. The green marker shows the staring point, i.e. the initial
+    values, and the red dot marks the endpoint. \textbf{Lower right:} Here is the Data plotted
+    in a Histogram where the bin width is one. Additionally there are two PDFs plotted. The
+    orange curve shows the PDF where mean and standard deviation are the mean values of the
+    last 1000 iterations from the MCMC method and the blue curve shows the PDF with a mean and
+    standard deviation determined with numpy.}
+	\label{fig:mcmc}
+\end{figure*}
+For this example a python script was written in which the \emph{Metropolis-Hastings} algorithm
+was applied 3000 times. The line numbers in all the code samples featured here correspond to
+the line numbers in the \verb+mcmc.py+ file. For the final result the mean value of the last
+1000 iterations was taken. The starting values were derived from the mean and standard
+deviation computed with \verb+numpy.mean()+ and \verb+numpy.std()+ functions. To these values a
+random fraction of themselves was added as is shown below:
+\begin{lstlisting}[firstnumber=172]
+factors = np.random.uniform(-1, 1, 2)|\Suppressnumber|
+[...]|\Reactivatenumber{179}|
+mean_0 = mean + mean * factors[0]
+std_0 = std + std * factors[1]
+if std_0 < 0:
+    std_0 *= 1
+\end{lstlisting}
+The main part of the work is done in a for loop, where the \emph{Metropolis-Hastings} algorithm
+updates the mean value and the standard deviation in each iteration. Additionally a progressbar
+to indicate the progress of the simulation to the user.
+\begin{lstlisting}[firstnumber=203]
+for i in range(iters):|\Suppressnumber|
+    [...]|\Reactivatenumber{211}|
+    means[i] = mean_0
+    stds[i] = std_0
+    mean_0, std_0 = metropolis_hastings(data, mean_0, std_0)
+\end{lstlisting}
+Finally the results are plotted as per the requirement. In the \verb+metropolis_hastings()+
+function the new proposed parameters are determined by creating a normal distribution around
+the old values and randomly choosing a number from each distribution.
+\begin{lstlisting}[firstnumber=120]
+mu_noise = stats.norm(mu, sigma_mh).rvs()
+sigma_noise = stats.norm(sigma, sigma_mh).rvs()
+\end{lstlisting}
+Where the \verb+scipy.stats+ module is used and \verb+sigma_mh+ is the standard deviation of
+the normal distribution around the old value. \(\sigma_\mathrm{mh}\) determines the size of the
+random step and is set to 0.1 for this example.
+
+\section{Results}%
+\label{sec:results}
+
+As can be seen in Figure \ref{fig:mcmc}, the algorithm works really well and yields good
+results for the two parameters \(\mu\) and \(\sigma\) of the Probability Density function.
+
+\end{document}
