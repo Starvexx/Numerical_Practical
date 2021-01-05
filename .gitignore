@@ -11,6 +11,7 @@ __pycache__/
 *.txt
 *.bbl
 *.blg
+*.png
 
 # Exclude metafiles in Report folder.
 #
