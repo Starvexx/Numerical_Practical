@@ -4,10 +4,10 @@
     Author:         David Hernandez
     Matr. Nr.:      01601331
     e-Mail:         david.hernandez@univie.ac.at
-    Created:        04.01.2021
-    Last edited:    05.01.2021
+    Created:        07.01.2021
+    Last edited:    07-01-2021
 
-Main driver function for hydrodynamic advection simulations.
+Description...
 """
 
 #######################################################################
@@ -32,12 +32,13 @@ from matplotlib import rc
 from matplotlib import pyplot as plt
 
 #######################################################################
-#   Import user defined packages.
+#   Import user files.
 #######################################################################
 
-from advection.spatial_methods import CentralDifferenceScheme as cds
-from advection.spatial_methods import UpstreamDifferencingScheme as uds
-from advection.spatial_methods import LaxWendroffScheme as lws
+from advection.flux_methods import DonorCellMethod as dcm
+from advection.flux_methods import FrommsMethod as fm
+from advection.flux_methods import BeamWarmingMethod as bwm
+from advection.flux_methods import LaxWendroffMethod as lwm
 
 #######################################################################
 #   Define functions used in this file or package.
@@ -66,7 +67,7 @@ def set_image_save_path(sysOS):
         #   notify the user and do nothing.
         ###############################################################
         try:
-            image_save_path = os.getcwd() + '\plots\Part_01'
+            image_save_path = os.getcwd() + '\plots'
             os.mkdir(image_save_path)
         except FileExistsError:
             print('Plot directory already exists.')
@@ -76,7 +77,7 @@ def set_image_save_path(sysOS):
         #   notify the user and do nothing.
         ###############################################################
         try:
-            image_save_path = os.getcwd() + '/plots/Part_01'
+            image_save_path = os.getcwd() + '/plots'
             os.mkdir(image_save_path)
         except FileExistsError:
             print('Plot directory already exists.')
@@ -84,23 +85,27 @@ def set_image_save_path(sysOS):
 
 def parse_args():
     """A simple argument parser to read commandline arguments."""
-    possible_modes = ['c', 'u', 'l']
+    ###################################################################
+    #   d: Donor Cell Method   (no slope)
+    #   f: Fromm Method        (central slope)
+    #   b: Beam Warming Method (upwind slope)
+    #   d: Lax Wendroff Method (downwind slope)
+    ###################################################################
+    possible_modes = ['d', 'f', 'b', 'fl']
     arg_names = sys.argv[1::2]
-
-    man_path = './man/manual.txt'
 
     if len(sys.argv) > 5:
         warnings.warn('Wrong number of arguments given.')
-        with open(man_path) as helpfile:
+        with open('./man/flux_manual.txt') as helpfile:
             print(helpfile.read())
         exit(1)
     elif len(sys.argv) == 1:
         warnings.warn('No arguments given, defaulting to Lax-Wendroff.')
-        return 'l', 5/99
+        return 'fl', 5/99
 
     if '-m' not in arg_names:
         print('ERROR: Too many missing arguments.')
-        with open(man_path) as helpfile:
+        with open('./man/flux_manual.txt') as helpfile:
             print(helpfile.read())
         exit(1)
     elif ('-m' in arg_names) and ('-t' not in arg_names):
@@ -111,10 +116,10 @@ def parse_args():
                 return sys.argv[idx_mode+1], 5/99
             else:
                 warnings.warn('Wrong method chosen, using Lax-Wendroff.')
-                return 'l', 5/99
+                return 'fl', 5/99
         except IndexError:
             warnings.warn('No method chosen, using Lax-Wendroff.')
-            return 'l', 5/99
+            return 'fl', 5/99
     elif ('-m' in arg_names) and ('-t' in arg_names):
         idx_mode = sys.argv.index('-m')
         idx_dt = sys.argv.index('-t')
@@ -123,15 +128,16 @@ def parse_args():
                 return sys.argv[idx_mode+1], sys.argv[idx_dt+1]
             else:
                 warnings.warn('Wrong method chosen, using Lax Wendroff.')
-                return 'l', sys.argv[idx_dt+1]
+                return 'fl', sys.argv[idx_dt+1]
         except IndexError:
             warnings.warn('At least one argument missing, using Lax Wendroff'+\
                           ' with delta_t = 5/99')
-            return 'l', 5/99
+            return 'fl', 5/99
     else:
         print('ERROR: Something went wrong.')
-        with open(man_path) as helpfile:
+        with open('./man/flux_manual.txt') as helpfile:
             print(helpfile.read())
+
 
 #######################################################################
 #   Main function.
@@ -146,7 +152,7 @@ def main():
     #   Set the SPATIAL_MODEL variable that determines which method is
     #   is going to be used in the simulation.
     ###################################################################
-    SPATIAL_MODEL = arguments[0]
+    FLUX_MODEL = arguments[0]
     dt = Fraction(arguments[1])
     delta_t = dt.numerator / dt.denominator
 
@@ -159,12 +165,15 @@ def main():
     #   If for some unknown reason none of these options are chosen,
     #   the program exits with a RuntimeError.
     ###################################################################
-    if SPATIAL_MODEL == 'c':
-        simulation = cds(sim_time_steps=100)
-    elif SPATIAL_MODEL == 'u':
-        simulation = uds(sim_time_steps=100)
-    elif SPATIAL_MODEL == 'l':
-        simulation = lws(sim_time_steps=100)
+    if FLUX_MODEL == 'd':
+        print('Using Donor Cell...')
+        simulation = dcm(sim_time_steps=100)
+    elif FLUX_MODEL == 'f':
+        simulation = fm(sim_time_steps=100)
+    elif FLUX_MODEL == 'b':
+        simulation = bwm(sim_time_steps=100)
+    elif FLUX_MODEL == 'fl':
+        simulation = lwm(sim_time_steps=100)
     else:
         raise RuntimeError('Unknown simulation model. Exiting...')
         exit(1)
@@ -174,7 +183,7 @@ def main():
     #   only two arguments, the time step length delta_t and the 
     #   velocity.
     ###################################################################
-    simulation.propagate(delta_t=delta_t, velocity=0.5)
+    simulation.propagate(delta_t=delta_t, velocity=-0.5)
 
     ###################################################################
     #   Get the machines operating system info and set the image save
@@ -258,6 +267,7 @@ def main():
                                         stderr=subprocess.STDOUT)
         except subprocess.CalledProcessError:
             warnings.warn('Unable to create animation with ImageMagick.')
+
 
 if __name__ == '__main__':
     main()

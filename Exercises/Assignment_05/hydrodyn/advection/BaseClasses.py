@@ -59,7 +59,7 @@ class SimulationDomain:
 
     Methods:
     --------
-    function(xx)
+    _function(xx)
         A default test function to test the algorithm. In this case it
         is a rect function which is 1 if 4 <= x <= 6 and 0.1 elsewhere.
     """
@@ -68,11 +68,11 @@ class SimulationDomain:
     domain_range = (0, 10)
 
 
-    def function(self, xx):
+    def _function(self, xx):
         """Default function if none is defined by the user."""
         self.buff = np.zeros(np.shape(xx)) + 0.1
-        self.buff[4 <= xx] = 1
-        self.buff[6 <= xx] = 0.1
+        self.buff[2 <= xx] = 1
+        self.buff[4 <= xx] = 0.1
         return self.buff
 
 
@@ -80,7 +80,8 @@ class SimulationDomain:
                  delta_x=None,
                  sim_time_steps=None,
                  function=None,
-                 domain_range=None):
+                 domain_range=None,
+                 bins=None):
         """Object constructor.
 
         First the simulation domain is set up according to the
@@ -107,11 +108,14 @@ class SimulationDomain:
         if sim_time_steps is not None:
             self.sim_time_steps = sim_time_steps
         if function is not None:
-            self.function = function
+            self._function = function
         if isinstance(domain_range,
                       (tuple, list,
                        np.ndarray)) and len(domain_range) == 2:
             self.domain_range = domain_range
+        if bins is not None:
+            self.delta_x = (self.domain_range[1] - self.domain_range[0])\
+                         / (bins - 1)
 
         ###############################################################
         #   initialize the x array holding the bin centers.
@@ -129,6 +133,15 @@ class SimulationDomain:
         ###############################################################
         #   Set the initial condition for the simulation.
         ###############################################################
-        self.sim_spacetime[0] = self.function(self.x)
+        self.sim_spacetime[0] = self._function(self.x)
 
 
+    def _flux(self, velocity, quantity, sigma, delta_t):
+        """Compute the flux at the border."""
+        return velocity * (quantity
+                           + 0.5 * sigma * (self.delta_x - velocity * delta_t))
+
+
+    def _invert_spacetime(self):
+        """Invert the spatial component of the simulation space time"""
+        self.sim_spacetime = self.sim_spacetime[:, ::-1]
