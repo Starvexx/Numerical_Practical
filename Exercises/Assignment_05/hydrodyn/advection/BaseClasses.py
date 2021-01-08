@@ -145,3 +145,25 @@ class SimulationDomain:
     def _invert_spacetime(self):
         """Invert the spatial component of the simulation space time"""
         self.sim_spacetime = self.sim_spacetime[:, ::-1]
+
+
+    def add_quantity(self, function=None):
+        """Add a new quantity to the simulation."""
+        if function is not None:
+            self._function = function
+
+        self._new_quantity = np.zeros((len(self.x), self.sim_time_steps),
+                                      dtype=np.float64).T
+        self._new_quantity[0] = self._function(self.x)
+
+        if len(np.shape(self.sim_spacetime)) == 2:
+            self.sim_spacetime = np.stack((self.sim_spacetime,
+                                           self._new_quantity))
+        elif len(np.shape(self.sim_spacetime)) == 3:
+            self._new_quantity = self._new_quantity[np.newaxis, :]
+            self.sim_spacetime = np.concatenate((self.sim_spacetime,
+                                                 self._new_quantity))
+        else:
+            raise RuntimeError
+
+

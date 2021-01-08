@@ -36,7 +36,7 @@ from matplotlib import pyplot as plt
 #######################################################################
 
 from advection.flux_methods import BeamWarmingMethod as bwm
-from advection.flux_methods import LaxWendroffMethod as lwm
+from advection.flux_methods import TwoStepLaxWendroff as lwm
 
 #######################################################################
 #   Define functions used in this file or package.
@@ -142,16 +142,14 @@ def density_function(x):
 
 
 def velocity_function(x):
-    buff = np.zeros(np.shape(x)) + 0.125
-    buff[0.35 <= x] = 1.0
-    buff[0.65 <= x] = 0.125
+    buff = np.zeros(np.shape(x))
     return buff
 
 
 def preassure_function(x):
-    buff = np.zeros(np.shape(x)) + 0.125
+    buff = np.zeros(np.shape(x)) + 0.1
     buff[0.35 <= x] = 1.0
-    buff[0.65 <= x] = 0.125
+    buff[0.65 <= x] = 0.1
     return buff
 
 
@@ -187,29 +185,29 @@ def main():
     #   the program exits with a RuntimeError.
     ###################################################################
     if MODEL == 'l':
-        density = lwm(function=density_function,
-                      domain_range=(0, 1),
-                      bins=1000)
-        momentum_density = lwm(function=velocity_function,
-                               domain_range=(0, 1),
-                               bins=1000)
-        energy = lwm(function=preassure_function,
-                     domain_range=(1, 0),
-                     bins=1000)
+        simulation = lwm(function=density_function,
+                         domain_range=(0, 1),
+                         bins=1000)
+        simulation.add_quantity(function=velocity_function)
+        simulation.add_quantity(function=preassure_function)
     elif MODEL == 'b':
-        density = bwm(function=density_function,
-                      domain_range=(0, 1),
-                      bins=1000)
-        momentum_density = bwm(function=velocity_function,
-                               domain_range=(0, 1),
-                               bins=1000)
-        energy = bwm(function=preassure_function,
-                     domain_range=(0, 1),
-                     bins=1000)
+        pass
+        # density = bwm(function=density_function,
+        #               domain_range=(0, 1),
+        #               bins=1000)
+        # momentum_density = bwm(function=velocity_function,
+        #                        domain_range=(0, 1),
+        #                        bins=1000)
+        # energy = bwm(function=preassure_function,
+        #              domain_range=(0, 1),
+        #              bins=1000)
     else:
         raise RuntimeError('Unknown simulation model. Exiting...')
         exit(1)
 
+    ###################################################################
+    #   Propagation...?
+    ###################################################################
 
 if __name__ == '__main__':
     main()
