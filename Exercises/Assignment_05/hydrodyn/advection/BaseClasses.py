@@ -66,6 +66,7 @@ class SimulationDomain:
     sim_time_steps = 10
     delta_x = 10/99
     domain_range = (0, 10)
+    gamma = 5/3
 
 
     def _function(self, xx):
@@ -134,6 +135,7 @@ class SimulationDomain:
         #   Set the initial condition for the simulation.
         ###############################################################
         self.sim_spacetime[0] = self._function(self.x)
+        print('Initialized Object.')
 
 
     def _flux(self, velocity, quantity, sigma, delta_t):
@@ -149,17 +151,34 @@ class SimulationDomain:
 
     def add_quantity(self, function=None):
         """Add a new quantity to the simulation."""
-        if function is not None:
+        ###############################################################
+        #   Distinguish between actual function and array with function
+        #   evaluated values.
+        ###############################################################
+        if type(function).__name__ == 'ndarray'\
+                and np.shape(function) == np.shape(self.x):
+
+            self._new_quantity = np.zeros(np.shape(self.sim_spacetime[0]),
+                                          dtype=np.float64)
+
+            self._new_quantity[0] = function
+        elif type(function).__name__ == 'function':
             self._function = function
 
-        self._new_quantity = np.zeros((len(self.x), self.sim_time_steps),
-                                      dtype=np.float64).T
-        self._new_quantity[0] = self._function(self.x)
+            self._new_quantity = np.zeros((len(self.x), self.sim_time_steps),
+                                          dtype=np.float64).T
+            self._new_quantity[0] = self._function(self.x)
+        else:
+            raise RuntimeError
 
+        ###############################################################
+        #   Append the new quantity to the existing one(s).
+        ###############################################################
         if len(np.shape(self.sim_spacetime)) == 2:
             self.sim_spacetime = np.stack((self.sim_spacetime,
                                            self._new_quantity))
         elif len(np.shape(self.sim_spacetime)) == 3:
+            print(np.shape(self.sim_spacetime))
             self._new_quantity = self._new_quantity[np.newaxis, :]
             self.sim_spacetime = np.concatenate((self.sim_spacetime,
                                                  self._new_quantity))
