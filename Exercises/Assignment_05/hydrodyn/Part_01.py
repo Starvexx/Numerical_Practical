@@ -80,6 +80,7 @@ def set_image_save_path(sysOS):
             os.mkdir(image_save_path)
         except FileExistsError:
             print('Plot directory already exists.')
+    return image_save_path
 
 
 def parse_args():
@@ -181,7 +182,7 @@ def main():
     #   path for any plots that will be produced.
     ###################################################################
     sysOS = platform.system()
-    set_image_save_path(sysOS)
+    save_path = set_image_save_path(sysOS)
 
     for i, step in enumerate(simulation.sim_spacetime):
         ###############################################################
@@ -230,13 +231,13 @@ def main():
         #   Save the Figure to a file in the current working
         #   directory.
         ###############################################################
-        plt.savefig(f'./plots/frame_{i:03}.png', format='png')
+        plt.savefig(f'{save_path}/frame_{i:03}.png', format='png')
 
         ###############################################################
         #   Save one frame in the middle as a snapshot for later usage.
         ###############################################################
         if i == int(simulation.sim_time_steps / 2):
-            plt.savefig(f'./plots/{type(simulation).__name__}' + \
+            plt.savefig(f'{save_path}/{type(simulation).__name__}' + \
                         f'_snapshot_{i:03}.pdf', format='pdf')
         plt.close(fig)
 
@@ -251,13 +252,14 @@ def main():
     ###################################################################
     animation_name = 'animation_' + type(simulation).__name__ + '.gif'
     if sysOS == 'Linux':
-        cmd = f'convert -delay 5 ./plots/frame_*.png -loop 0 {animation_name}' \
-            + '&& rm ./plots/*.png'
+        cmd = f'convert -delay 5 {save_path}/frame_*.png -loop 0 ' \
+            + f'{save_path}/{animation_name} && rm {save_path}/*.png'
         try:
             _ = subprocess.check_output(cmd, shell=True,
                                         stderr=subprocess.STDOUT)
         except subprocess.CalledProcessError:
             warnings.warn('Unable to create animation with ImageMagick.')
+    print(f'Done! Check {save_path} for plots and/or animations.')
 
 if __name__ == '__main__':
     main()

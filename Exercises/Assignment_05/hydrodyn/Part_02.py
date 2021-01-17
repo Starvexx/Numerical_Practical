@@ -67,7 +67,7 @@ def set_image_save_path(sysOS):
         #   notify the user and do nothing.
         ###############################################################
         try:
-            image_save_path = os.getcwd() + '\plots'
+            image_save_path = os.getcwd() + '\plots\Part_02'
             os.mkdir(image_save_path)
         except FileExistsError:
             print('Plot directory already exists.')
@@ -77,10 +77,11 @@ def set_image_save_path(sysOS):
         #   notify the user and do nothing.
         ###############################################################
         try:
-            image_save_path = os.getcwd() + '/plots'
+            image_save_path = os.getcwd() + '/plots/Part_02'
             os.mkdir(image_save_path)
         except FileExistsError:
             print('Plot directory already exists.')
+    return image_save_path
 
 
 def parse_args():
@@ -94,33 +95,37 @@ def parse_args():
     possible_modes = ['d', 'f', 'b', 'fl']
     arg_names = sys.argv[1::2]
 
-    if len(sys.argv) > 5:
+    if len(sys.argv) > 7:
         warnings.warn('Wrong number of arguments given.')
         with open('./man/flux_manual.txt') as helpfile:
             print(helpfile.read())
         exit(1)
     elif len(sys.argv) == 1:
         warnings.warn('No arguments given, defaulting to Lax-Wendroff.')
-        return 'fl', 5/99
+        return 'fl', 5/99, 0.5
 
     if '-m' not in arg_names:
         print('ERROR: Too many missing arguments.')
         with open('./man/flux_manual.txt') as helpfile:
             print(helpfile.read())
         exit(1)
-    elif ('-m' in arg_names) and ('-t' not in arg_names):
+    elif ('-m' in arg_names)\
+     and ('-t' not in arg_names)\
+     and ('-u' not in arg_names):
         idx_mode = sys.argv.index('-m')
         warnings.warn('Missing "-t" argument, using delta_t = 5/99')
         try:
             if sys.argv[idx_mode+1] in possible_modes:
-                return sys.argv[idx_mode+1], 5/99
+                return sys.argv[idx_mode+1], 5/99, 0.5
             else:
                 warnings.warn('Wrong method chosen, using Lax-Wendroff.')
-                return 'fl', 5/99
+                return 'fl', 5/99, 0.5
         except IndexError:
             warnings.warn('No method chosen, using Lax-Wendroff.')
-            return 'fl', 5/99
-    elif ('-m' in arg_names) and ('-t' in arg_names):
+            return 'fl', 5/99, 0.5
+    elif ('-m' in arg_names)\
+     and ('-t' in arg_names)\
+     and ('-u' not in arg_names):
         idx_mode = sys.argv.index('-m')
         idx_dt = sys.argv.index('-t')
         try:
@@ -128,11 +133,29 @@ def parse_args():
                 return sys.argv[idx_mode+1], sys.argv[idx_dt+1]
             else:
                 warnings.warn('Wrong method chosen, using Lax Wendroff.')
-                return 'fl', sys.argv[idx_dt+1]
+                return 'fl', sys.argv[idx_dt+1], 0.5
         except IndexError:
             warnings.warn('At least one argument missing, using Lax Wendroff'+\
                           ' with delta_t = 5/99')
-            return 'fl', 5/99
+            return 'fl', 5/99, 0.5
+    elif ('-m' in arg_names)\
+     and ('-t' in arg_names)\
+     and ('-u' in arg_names):
+        idx_mode = sys.argv.index('-m')
+        idx_dt = sys.argv.index('-t')
+        idx_u = sys.argv.index('-u')
+        try:
+            if sys.argv[idx_mode+1] in possible_modes:
+                return sys.argv[idx_mode+1],\
+                       sys.argv[idx_dt+1],\
+                       sys.argv[idx_u+1]
+            else:
+                warnings.warn('Wrong method chosen, using Lax Wendroff.')
+                return 'fl', sys.argv[idx_dt+1], sys.argv[idx_u+1]
+        except IndexError:
+            warnings.warn('At least one argument missing, using Lax Wendroff'+\
+                          ' with delta_t = 5/99 and u = 0.5')
+            return 'fl', 5/99, 0.5
     else:
         print('ERROR: Something went wrong.')
         with open('./man/flux_manual.txt') as helpfile:
@@ -155,6 +178,7 @@ def main():
     FLUX_MODEL = arguments[0]
     dt = Fraction(arguments[1])
     delta_t = dt.numerator / dt.denominator
+    v = float(arguments[2])
 
     ###################################################################
     #   Create a method instance which is a SimulationDomain subclass.
@@ -166,7 +190,6 @@ def main():
     #   the program exits with a RuntimeError.
     ###################################################################
     if FLUX_MODEL == 'd':
-        print('Using Donor Cell...')
         simulation = dcm(sim_time_steps=100)
     elif FLUX_MODEL == 'f':
         simulation = fm(sim_time_steps=100)
@@ -183,14 +206,14 @@ def main():
     #   only two arguments, the time step length delta_t and the 
     #   velocity.
     ###################################################################
-    simulation.propagate(delta_t=delta_t, velocity=-0.5)
+    simulation.propagate(delta_t=delta_t, velocity=v)
 
     ###################################################################
     #   Get the machines operating system info and set the image save
     #   path for any plots that will be produced.
     ###################################################################
     sysOS = platform.system()
-    set_image_save_path(sysOS)
+    save_path = set_image_save_path(sysOS)
 
     for i, step in enumerate(simulation.sim_spacetime):
         ###############################################################
@@ -239,14 +262,14 @@ def main():
         #   Save the Figure to a file in the current working
         #   directory.
         ###############################################################
-        plt.savefig(f'./plots/frame_{i:03}.png', format='png')
+        plt.savefig(f'{save_path}/frame_{i:03}.png', format='png')
 
         ###############################################################
         #   Save one frame in the middle as a snapshot for later usage.
         ###############################################################
         if i == int(simulation.sim_time_steps / 2):
-            plt.savefig(f'./plots/{type(simulation).__name__}' + \
-                        f'_snapshot_{i:03}.pdf', format='pdf')
+            plt.savefig(f'{save_path}/{type(simulation).__name__}' + \
+                        f'_snapshot_{i:03}_v{v}.pdf', format='pdf')
         plt.close(fig)
 
         ###############################################################
@@ -258,15 +281,16 @@ def main():
     #   delete the single frames. If ImageMagick is inot available on
     #   the machine, notify the user and keep the individual frames.
     ###################################################################
-    animation_name = 'animation_' + type(simulation).__name__ + '.gif'
+    animation_name = f'animation_{type(simulation).__name__}_v{v}.gif'
     if sysOS == 'Linux':
-        cmd = f'convert -delay 5 ./plots/frame_*.png -loop 0 {animation_name}' \
-            + '&& rm ./plots/*.png'
+        cmd = f'convert -delay 5 {save_path}/frame_*.png -loop 0 ' \
+            + f'{save_path}/{animation_name} && rm {save_path}/*.png'
         try:
             _ = subprocess.check_output(cmd, shell=True,
                                         stderr=subprocess.STDOUT)
         except subprocess.CalledProcessError:
             warnings.warn('Unable to create animation with ImageMagick.')
+    print(f'Done! Check {save_path} for plots and/or animations.')
 
 
 if __name__ == '__main__':
